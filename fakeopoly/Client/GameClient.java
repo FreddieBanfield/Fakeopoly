@@ -12,28 +12,49 @@ import Client.UI.MainMenu;
 
 public class GameClient {
 
-    BufferedReader in;
-    PrintWriter out;
+    // Variables
+    // Server
+    private String serverAddress;
+    private int serverPort;
+    private BufferedReader in;
+    private PrintWriter out;
 
-    MainMenu mainMenu;
+    // UI
+    private int FRAMEWIDTH = 600;
+    private int FRAMEHEIGHT = 600;
+    private MainMenu mainMenu;
 
     // constructor
     public GameClient() {
-        mainMenu = new MainMenu();
+        mainMenu = new MainMenu(FRAMEWIDTH, FRAMEHEIGHT);
     }
 
     /**
-     * Prompt for and return the address of the server.
+     * Gets the server address.
      */
     private String getServerAddress() {
-        return null;
+        return serverAddress;
     }
 
     /**
-     * Prompt for and return the desired screen name.
+     * Sets the server address.
      */
-    private String getName() {
-        return null;
+    private void setServerAddress(String address) {
+        serverAddress = address;
+    }
+
+    /**
+     * Gets the server port.
+     */
+    private String getServerPort() {
+        return serverAddress;
+    }
+
+    /**
+     * Sets the server port.
+     */
+    private void setServerPort(int port) {
+        serverPort = port;
     }
 
     /**
