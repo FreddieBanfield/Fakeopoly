@@ -28,6 +28,7 @@ public class GameClient {
     private MainMenu mainMenu;
     private FindServer findServer;
     private GameView gameView;
+    private int id;
 
     // constructor
     public GameClient() {
@@ -48,6 +49,14 @@ public class GameClient {
 
     public void connectToServer() throws IOException {
         socket = new Socket(serverAddress, serverPort);
+        try {
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            setClientId(Integer.parseInt(in.readLine()));
+            System.out.println("Client to server connection created\nClient Id: " + getClientId());
+        } catch (Exception e) {
+            System.out.println("Failed to setup input output streams with server.");
+        }
     }
 
     /**
@@ -76,6 +85,20 @@ public class GameClient {
      */
     public void setServerPort(int port) {
         serverPort = port;
+    }
+
+    /**
+     * Gets the client Id.
+     */
+    public int getClientId() {
+        return id;
+    }
+
+    /**
+     * Sets the client Id.
+     */
+    public void setClientId(int id) {
+        this.id = id;
     }
 
     /**
