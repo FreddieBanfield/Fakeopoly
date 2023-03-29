@@ -8,32 +8,48 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Client.GameClient;
+
 public class MainMenu {
 
     private JFrame frame;
+    private int frameWidth;
+    private int frameHeight;
+    private GameClient client;
 
-    public MainMenu(int width, int height) {
-        // Layout GUI
-        frame = new JFrame("Fakeopoly");
+    public MainMenu(int width, int height, GameClient client) {
+        // Set Variables
+        frameWidth = width;
+        frameHeight = height;
+        this.client = client;
+
+        // Frame
+        frame = new JFrame("Fakeopoly - Main Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(width, height);
+        frame.setSize(frameWidth, frameHeight);
         frame.setLocationRelativeTo(null); // Centers screen
         frame.setResizable(false);
 
+        // Panel
         JPanel panel = new JPanel();
         panel.setLayout(null);
 
-        JButton button = new JButton("Find Server");
-        button.setBounds(width / 2 - 105, height / 2 - 20, 200, 40);
-        button.addActionListener(new ActionListener() {
+        // Components
+        JButton findServerBtn = new JButton("Find Server");
+        findServerBtn.setBounds(frameWidth / 2 - 105, 400, 200, 40);
+        findServerBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("I was clicked!");
+                System.out.println("Opening Find Server page.");
+                client.openFindServer();
+                frame.dispose();
             }
         });
 
-        panel.add(button, BorderLayout.CENTER);
+        // Add Components to Panel
+        panel.add(findServerBtn, BorderLayout.CENTER);
 
+        // Add Panel to Frame
         frame.setContentPane(panel);
         frame.setVisible(true);
     }

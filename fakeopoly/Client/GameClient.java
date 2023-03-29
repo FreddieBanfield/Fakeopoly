@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import javax.swing.JFrame;
 
+import Client.UI.FindServer;
 import Client.UI.MainMenu;
 
 public class GameClient {
@@ -23,10 +24,23 @@ public class GameClient {
     private int FRAMEWIDTH = 600;
     private int FRAMEHEIGHT = 600;
     private MainMenu mainMenu;
+    private FindServer FindServer;
 
     // constructor
     public GameClient() {
-        mainMenu = new MainMenu(FRAMEWIDTH, FRAMEHEIGHT);
+        openMainMenu();
+    }
+
+    public void openMainMenu() {
+        mainMenu = new MainMenu(FRAMEWIDTH, FRAMEHEIGHT, this);
+    }
+
+    public void openFindServer() {
+        FindServer = new FindServer(FRAMEWIDTH, FRAMEHEIGHT, this);
+    }
+
+    public void openGame() {
+
     }
 
     /**
