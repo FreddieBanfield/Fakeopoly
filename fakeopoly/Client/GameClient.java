@@ -9,12 +9,14 @@ import java.net.Socket;
 import javax.swing.JFrame;
 
 import Client.UI.FindServer;
+import Client.UI.GameView;
 import Client.UI.MainMenu;
 
 public class GameClient {
 
     // Variables
     // Server
+    private Socket socket;
     private String serverAddress;
     private int serverPort;
     private BufferedReader in;
@@ -24,7 +26,8 @@ public class GameClient {
     private int FRAMEWIDTH = 600;
     private int FRAMEHEIGHT = 600;
     private MainMenu mainMenu;
-    private FindServer FindServer;
+    private FindServer findServer;
+    private GameView gameView;
 
     // constructor
     public GameClient() {
@@ -36,53 +39,43 @@ public class GameClient {
     }
 
     public void openFindServer() {
-        FindServer = new FindServer(FRAMEWIDTH, FRAMEHEIGHT, this);
+        findServer = new FindServer(FRAMEWIDTH, FRAMEHEIGHT, this);
     }
 
-    public void openGame() {
+    public void openGameView() {
+        gameView = new GameView(FRAMEWIDTH, FRAMEHEIGHT, this);
+    }
 
+    public void connectToServer() throws IOException {
+        socket = new Socket(serverAddress, serverPort);
     }
 
     /**
      * Gets the server address.
      */
-    private String getServerAddress() {
+    public String getServerAddress() {
         return serverAddress;
     }
 
     /**
      * Sets the server address.
      */
-    private void setServerAddress(String address) {
+    public void setServerAddress(String address) {
         serverAddress = address;
     }
 
     /**
      * Gets the server port.
      */
-    private String getServerPort() {
-        return serverAddress;
+    public int getServerPort() {
+        return serverPort;
     }
 
     /**
      * Sets the server port.
      */
-    private void setServerPort(int port) {
+    public void setServerPort(int port) {
         serverPort = port;
-    }
-
-    /**
-     * Connects to the server then enters the processing loop.
-     */
-    private void run() throws IOException {
-
-        // Make connection and initialize streams
-        String serverAddress = getServerAddress();
-        Socket socket = new Socket(serverAddress, 9001);
-        in = new BufferedReader(new InputStreamReader(
-                socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
-        String line;
     }
 
     /**
@@ -92,6 +85,5 @@ public class GameClient {
         GameClient client = new GameClient();
         client.mainMenu.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         client.mainMenu.getFrame().setVisible(true);
-        client.run();
     }
 }

@@ -109,22 +109,41 @@ public class FindServer {
     private void joinBtnAction() {
         System.out.println("Attempting to join Game...");
         boolean hasErrors = false;
+        int serverPort = -1;
         if (serverAddressTF.getText() == null || serverAddressTF.getText().equals("")) {
+            serverAddressErrorLbl.setText("Server Address is required to connect!");
             serverAddressErrorLbl.setVisible(true);
             hasErrors = true;
         } else {
             serverAddressErrorLbl.setVisible(false);
         }
         if (serverPortTF.getText() == null || serverPortTF.getText().equals("")) {
+            serverPortErrorLbl.setText("Server Port is required to connect!");
             serverPortErrorLbl.setVisible(true);
             hasErrors = true;
         } else {
-            serverPortErrorLbl.setVisible(false);
+            try {
+                serverPort = Integer.parseInt(serverPortTF.getText());
+                serverPortErrorLbl.setVisible(false);
+            } catch (Exception e) {
+                System.out.println(e);
+                serverPortErrorLbl.setText("Server Port must only contain digits!");
+                serverPortErrorLbl.setVisible(true);
+                hasErrors = true;
+            }
         }
 
         if (hasErrors != true) {
-            client.openMainMenu();
-            frame.dispose();
+            client.setServerAddress(serverAddressTF.getText());
+            client.setServerPort(serverPort);
+
+            try {
+                client.connectToServer();
+                client.openGameView();
+                frame.dispose();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(frame, e);
+            }
         }
     }
 
