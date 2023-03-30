@@ -1,5 +1,7 @@
 package Client.UI;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -13,9 +15,6 @@ public class GameLobby {
     private int frameWidth;
     private int frameHeight;
     private GameClient client;
-
-    JTextField textField = new JTextField(40);
-    JTextArea messageArea = new JTextArea(8, 40);
 
     public GameLobby(int width, int height, GameClient client) {
         // Set Variables
@@ -37,7 +36,7 @@ public class GameLobby {
         // Components
 
         // Add Components to Panel
-        // panel.add(findServerBtn, BorderLayout.CENTER);
+        panel.add(messageArea, BorderLayout.CENTER);
 
         // Add Panel to Frame
         frame.setContentPane(panel);
