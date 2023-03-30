@@ -139,7 +139,7 @@ public class FindServer {
 
             try {
                 client.connectToServer();
-                client.openGameView();
+                client.openGameLobby();
                 frame.dispose();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(frame, e);

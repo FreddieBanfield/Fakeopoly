@@ -8,9 +8,7 @@ import java.net.Socket;
 
 import javax.swing.JFrame;
 
-import Client.UI.FindServer;
-import Client.UI.GameView;
-import Client.UI.MainMenu;
+import Client.UI.*;
 
 public class GameClient {
 
@@ -28,6 +26,7 @@ public class GameClient {
     private MainMenu mainMenu;
     private FindServer findServer;
     private GameView gameView;
+    private GameLobby gameLobby;
     private int id;
 
     // constructor
@@ -45,6 +44,10 @@ public class GameClient {
 
     public void openGameView() {
         gameView = new GameView(FRAMEWIDTH, FRAMEHEIGHT, this);
+    }
+
+    public void openGameLobby() {
+        gameLobby = new GameLobby(FRAMEWIDTH, FRAMEHEIGHT, this);
     }
 
     public void connectToServer() throws IOException {

@@ -10,21 +10,21 @@ import javax.swing.JPanel;
 
 import Client.GameClient;
 
-public class GameView {
+public class GameLobby {
 
     private JFrame frame;
     private int frameWidth;
     private int frameHeight;
     private GameClient client;
 
-    public GameView(int width, int height, GameClient client) {
+    public GameLobby(int width, int height, GameClient client) {
         // Set Variables
         frameWidth = width;
         frameHeight = height;
         this.client = client;
 
         // Frame
-        frame = new JFrame("Fakeopoly - Game View");
+        frame = new JFrame("Fakeopoly - Game Lobby");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(frameWidth, frameHeight);
         frame.setLocationRelativeTo(null); // Centers screen
@@ -37,6 +37,7 @@ public class GameView {
         // Components
 
         // Add Components to Panel
+        // panel.add(findServerBtn, BorderLayout.CENTER);
 
         // Add Panel to Frame
         frame.setContentPane(panel);
