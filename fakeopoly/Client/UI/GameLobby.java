@@ -36,7 +36,6 @@ public class GameLobby {
         // Components
 
         // Add Components to Panel
-        panel.add(messageArea, BorderLayout.CENTER);
 
         // Add Panel to Frame
         frame.setContentPane(panel);
