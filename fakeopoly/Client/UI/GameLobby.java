@@ -1,12 +1,9 @@
 package Client.UI;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import Client.GameClient;
 
@@ -16,6 +13,9 @@ public class GameLobby {
     private int frameWidth;
     private int frameHeight;
     private GameClient client;
+
+    JTextField textField = new JTextField(40);
+    JTextArea messageArea = new JTextArea(8, 40);
 
     public GameLobby(int width, int height, GameClient client) {
         // Set Variables

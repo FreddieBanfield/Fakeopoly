@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
 
 public class GameServer {
 
@@ -17,7 +16,6 @@ public class GameServer {
      * The application main method, which just listens on a port and
      * spawns handler threads.
      */
-
     private static int count = 1;
 
     public static void main(String[] args) throws Exception {
@@ -44,10 +42,7 @@ public class GameServer {
         private BufferedReader in;
         private PrintWriter out;
 
-        /**
-         * Constructs a handler thread, squirreling away the socket.
-         * All the interesting work is done in the run method.
-         */
+        // Constructs a handler thread.
         public Handler(Socket socket) {
             this.socket = socket;
             System.out.println("Client: " + count + "\nRemote Socket Address; " + socket.getRemoteSocketAddress());
@@ -61,9 +56,7 @@ public class GameServer {
             }
         }
 
-        /**
-         * Thread run function
-         */
+        // Thread run function
         public void run() {
             try {
                 while (true) {
