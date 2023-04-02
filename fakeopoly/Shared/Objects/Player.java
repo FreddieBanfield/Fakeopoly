@@ -3,10 +3,6 @@ package Shared.Objects;
 import java.awt.Color;
 import java.io.Serializable;
 
-import javax.swing.text.GapContent;
-
-import Client.GameClient;
-
 /*
  * Player object should contain all the information regarding a player.
  * This includes: name, color, money, properties and more.

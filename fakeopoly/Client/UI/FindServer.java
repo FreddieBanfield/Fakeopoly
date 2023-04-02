@@ -186,6 +186,21 @@ public class FindServer {
                 hasErrors = true;
             }
         }
+        if (playerNameTF.getText() == null || playerNameTF.getText().equals("")
+                || playerNameTF.getText().length() >= 25) {
+            playerNameErrorLbl.setText("Player name is Invalid, ensure it is less than 25 chars!");
+            playerNameErrorLbl.setVisible(true);
+            hasErrors = true;
+        } else {
+            playerNameErrorLbl.setVisible(false);
+        }
+        if (playerColor == null) {
+            playerColorErrorLbl.setText("Please select a player color!");
+            playerColorErrorLbl.setVisible(true);
+            hasErrors = true;
+        } else {
+            playerColorErrorLbl.setVisible(false);
+        }
 
         if (hasErrors != true) {
             client.setServerAddress(serverAddressTF.getText());
