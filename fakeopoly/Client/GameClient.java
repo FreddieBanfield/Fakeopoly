@@ -1,24 +1,20 @@
 package Client;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.awt.Color;
+import java.rmi.Naming;
 
 import javax.swing.JFrame;
 
 import Client.UI.*;
+import Shared.Interfaces.PlayerIF;
+import Shared.Objects.Player;
 
 public class GameClient {
 
     // Variables
     // Server
-    private Socket socket;
     private String serverAddress;
     private int serverPort;
-    private BufferedReader in;
-    private PrintWriter out;
 
     // UI
     private int FRAMEWIDTH = 600;
@@ -50,15 +46,18 @@ public class GameClient {
         gameLobby = new GameLobby(FRAMEWIDTH, FRAMEHEIGHT, this);
     }
 
-    public void connectToServer() throws IOException {
-        socket = new Socket(serverAddress, serverPort);
+    public Boolean connectToServer(String playerName, Color playerColor) {
+        Player player;
         try {
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new PrintWriter(socket.getOutputStream(), true);
-            setClientId(Integer.parseInt(in.readLine()));
-            System.out.println("Client to server connection created\nClient Id: " + getClientId());
+            // lookup method to find reference of remote object
+            PlayerIF access = (PlayerIF) Naming
+                    .lookup("rmi://" + getServerAddress() + ":" + serverPort + "/PlayerService");
+            player = access.createPlayer(playerName, playerColor);
+            System.out.println("Player Name: " + player.getName() + ", Player Color: " + player.getColor());
+            return true;
         } catch (Exception e) {
-            System.out.println("Failed to setup input output streams with server.");
+            System.out.println(e);
+            return false;
         }
     }
 
