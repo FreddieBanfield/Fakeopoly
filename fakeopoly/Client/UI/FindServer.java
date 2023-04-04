@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -15,7 +16,7 @@ import javax.swing.JTextField;
 
 import Client.GameClient;
 
-public class FindServer {
+public class FindServer implements Serializable{
 
     private JFrame frame;
     private int frameWidth;

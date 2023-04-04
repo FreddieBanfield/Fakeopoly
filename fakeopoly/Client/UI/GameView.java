@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -20,7 +21,7 @@ import javax.swing.event.ChangeListener;
 
 import Client.GameClient;
 
-public class GameView {
+public class GameView implements Serializable{
     private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
 
     private JFrame frame;

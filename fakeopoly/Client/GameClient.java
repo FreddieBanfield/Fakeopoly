@@ -1,15 +1,19 @@
 package Client;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.rmi.Naming;
 
 import javax.swing.JFrame;
+import javax.swing.event.ChangeEvent;
 
 import Client.UI.*;
+import Shared.Interfaces.ChatClientIF;
+import Shared.Interfaces.ChatServerIF;
 import Shared.Interfaces.PlayerIF;
 import Shared.Objects.Player;
 
-public class GameClient {
+public class GameClient implements Serializable{
 
     // Variables
     // Server
@@ -22,8 +26,10 @@ public class GameClient {
     private MainMenu mainMenu;
     private FindServer findServer;
     private GameView gameView;
-    private GameLobby gameLobby;
+    public GameLobby gameLobby;
+    private ChatClientService _chatService;
     private int id;
+    public Player player;
 
     // constructor
     public GameClient() {
@@ -47,16 +53,22 @@ public class GameClient {
     }
 
     public Boolean connectToServer(String playerName, Color playerColor) {
-        Player player;
         try {
             // lookup method to find reference of remote object
             PlayerIF access = (PlayerIF) Naming
                     .lookup("rmi://" + getServerAddress() + ":" + serverPort + "/PlayerService");
+            ChatServerIF chat = (ChatServerIF) Naming.lookup("rmi://" + getServerAddress() + ":" + serverPort + "/ChatService");
+            _chatService = new ChatClientService();
+            Naming.rebind("rmi://localhost:" + serverPort+ "/ChatClientService", _chatService);
+
             player = access.createPlayer(playerName, playerColor);
-            System.out.println("Player Name: " + player.getName() + ", Player Color: " + player.getColor());
+
+            chat.registerListener(this);
+            //System.out.println("Player Name: " + player.getName() + ", Player Color: " + player.getColor());
             return true;
         } catch (Exception e) {
             System.out.println(e);
+            e.printStackTrace();
             return false;
         }
     }

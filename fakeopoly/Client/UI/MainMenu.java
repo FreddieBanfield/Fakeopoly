@@ -3,6 +3,7 @@ package Client.UI;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,7 +11,7 @@ import javax.swing.JPanel;
 
 import Client.GameClient;
 
-public class MainMenu {
+public class MainMenu implements Serializable{
 
     private JFrame frame;
     private int frameWidth;
@@ -41,7 +42,7 @@ public class MainMenu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Opening Find Server page.");
-                client.openGameView();
+                client.openFindServer();
                 frame.dispose();
             }
         });
