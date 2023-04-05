@@ -6,7 +6,7 @@ import java.rmi.Naming;
 import javax.swing.JFrame;
 
 import Client.UI.*;
-import Shared.Interfaces.PlayerIF;
+import Shared.Interfaces.PlayerServiceIF;
 import Shared.Objects.Player;
 
 public class GameClient {
@@ -15,6 +15,9 @@ public class GameClient {
     // Server
     private String serverAddress;
     private int serverPort;
+
+    // API
+    PlayerServiceIF _playerService;
 
     // UI
     private int FRAMEWIDTH = 600;
@@ -47,13 +50,14 @@ public class GameClient {
     }
 
     public Boolean connectToServer(String playerName, Color playerColor) {
-        Player player;
         try {
             // lookup method to find reference of remote object
-            PlayerIF access = (PlayerIF) Naming
+            _playerService = (PlayerServiceIF) Naming
                     .lookup("rmi://" + getServerAddress() + ":" + serverPort + "/PlayerService");
-            player = access.createPlayer(playerName, playerColor);
-            System.out.println("Player Name: " + player.getName() + ", Player Color: " + player.getColor());
+
+            setClientId(_playerService.createPlayer(playerName, playerColor));
+            System.out.println("Player Name: " + _playerService.getNameById(id) + ", Player Color: "
+                    + _playerService.getColorById(id));
             return true;
         } catch (Exception e) {
             System.out.println(e);
@@ -101,6 +105,13 @@ public class GameClient {
      */
     public void setClientId(int id) {
         this.id = id;
+    }
+
+    /**
+     * Gets the _playerService.
+     */
+    public PlayerServiceIF getPlayerService() {
+        return _playerService;
     }
 
     /**
