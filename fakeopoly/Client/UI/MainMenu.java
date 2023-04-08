@@ -41,7 +41,7 @@ public class MainMenu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Opening Find Server page.");
-                client.openGameView();
+                client.openFindServer();
                 frame.dispose();
             }
         });
