@@ -37,6 +37,21 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         return id;
     }
 
+    /**
+     * Connects the clients Interface to the server via username + id
+     * Example: Virality1
+     * 
+     * @param clientAddress
+     * @param clientPort
+     * @param id
+     * @return Returns true for success, false for fail
+     * @throws RemoteException
+     */
+    @Override
+    public boolean connectClient(String clientAddress, int clientPort, int id) throws RemoteException {
+        return players.get(id).connectClient(clientAddress, clientPort, id);
+    }
+
     @Override
     public String getNameById(int id) throws RemoteException {
         return players.get(id).getName();

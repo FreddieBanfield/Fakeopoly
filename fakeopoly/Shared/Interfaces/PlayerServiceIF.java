@@ -11,6 +11,8 @@ public interface PlayerServiceIF extends Remote {
 
     public int createPlayer(String name, Color color) throws RemoteException;
 
+    public boolean connectClient(String serverAddress, int serverPort, int id) throws RemoteException;
+
     public String getNameById(int id) throws RemoteException;
 
     public Color getColorById(int id) throws RemoteException;
