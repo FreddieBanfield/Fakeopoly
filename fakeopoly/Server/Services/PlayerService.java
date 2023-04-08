@@ -49,6 +49,6 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
 
     @Override
     public void deletePlayer(int id) throws RemoteException {
-        players.remove(id);
+        players.set(id, null);
     }
 }
