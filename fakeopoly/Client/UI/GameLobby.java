@@ -73,7 +73,7 @@ public class GameLobby {
 				backBtnAction();
 			}
 		});
-
+		//updateUserList();
 		// Add Components to Panel
 		panel.add(namesLbl);
 		panel.add(singleBtn);
@@ -115,11 +115,16 @@ public class GameLobby {
 
 	// Readies a player and updates server
 	private void readyBtnAction() {
+		updateUserList();
+	}
+
+	public void updateUserList(){
 		try {
 			String allNames = "";
 			int nop = client.getPlayerService().getNumberOfPlayers();
 			for (int i = 0; i < nop; i++) {
 				allNames += client.getPlayerService().getNameById(i) + " ";
+				System.out.println(allNames);
 			}
 			namesLbl.setText(allNames);
 			panel.repaint();

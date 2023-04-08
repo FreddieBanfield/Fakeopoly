@@ -1,23 +1,32 @@
 package Client;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 
 import javax.swing.JFrame;
 
 import Client.UI.*;
+import Shared.Interfaces.GameServiceIF;
 import Shared.Interfaces.PlayerServiceIF;
 import Shared.Objects.Player;
 
-public class GameClient {
+public class GameClient implements Serializable{
 
     // Variables
     // Server
     private String serverAddress;
     private int serverPort;
+    private int clientPort;
 
     // API
     PlayerServiceIF _playerService;
+    UpdateService _updateService;
+    GameServiceIF _gameService;
 
     // UI
     private int FRAMEWIDTH = 600;
@@ -25,7 +34,8 @@ public class GameClient {
     private MainMenu mainMenu;
     private FindServer findServer;
     private GameView gameView;
-    private GameLobby gameLobby;
+    public GameLobby gameLobby;
+
     private int id;
 
     // constructor
@@ -52,12 +62,18 @@ public class GameClient {
     public Boolean connectToServer(String playerName, Color playerColor) {
         try {
             // lookup method to find reference of remote object
-            _playerService = (PlayerServiceIF) Naming
-                    .lookup("rmi://" + getServerAddress() + ":" + serverPort + "/PlayerService");
+            _playerService = (PlayerServiceIF) Naming.lookup("rmi://" + getServerAddress() + ":" + serverPort + "/PlayerService");
+            _gameService = (GameServiceIF) Naming.lookup("rmi://" + getServerAddress() + ":" + serverPort + "/GameService");
 
+            
             setClientId(_playerService.createPlayer(playerName, playerColor));
-            System.out.println("Player Name: " + _playerService.getNameById(id) + ", Player Color: "
-                    + _playerService.getColorById(id));
+            System.out.println("Player Name: " + _playerService.getNameById(id) + ", Player Color: "+ _playerService.getColorById(id));
+            _updateService = new UpdateService(this);
+            setClientPort();
+            //Registry reg = LocateRegistry.getRegistry(serverPort);
+            //reg.rebind("UpdateService" + clientPort, _updateService);
+            Naming.rebind("rmi://localhost:9001/UpdateService" + clientPort, _updateService);
+            _gameService.updateUserList(clientPort);
             return true;
         } catch (Exception e) {
             System.out.println(e);
@@ -92,7 +108,9 @@ public class GameClient {
     public void setServerPort(int port) {
         serverPort = port;
     }
-
+    public void setClientPort(){
+        clientPort = serverPort + id + 1;
+    }
     /**
      * Gets the client Id.
      */
