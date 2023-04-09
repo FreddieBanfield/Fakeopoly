@@ -12,11 +12,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import Client.GameClient;
 
@@ -34,8 +30,9 @@ public class GameView {
     private int imagesNum = 40;
     private double imageScale = 1.25;
 
-    public GameView(int width, int height, GameClient client) {
+    public GameView(JFrame frame, int width, int height, GameClient client) {
         // Set Variables
+        this.frame = frame;
         frameWidth = width + 570;
         frameHeight = height + 170;
         this.client = client;
@@ -44,10 +41,9 @@ public class GameView {
         boardTiles = new JButton[imagesNum];
 
         // Frame
-        frame = new JFrame("Fakeopoly - Game View");
+        frame.setTitle("Fakeopoly - Game View");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(frameWidth, frameHeight);
-        frame.setLocationRelativeTo(null); // Centers screen
         frame.setResizable(false);
 
         // Panel
@@ -160,7 +156,6 @@ public class GameView {
                 boardPanel.add(boardTiles[i]);
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             System.out.println(e);
         }
 

@@ -32,17 +32,17 @@ public class GameLobby {
 	private JTextArea messagesTA;
 	private JTextField messageTF;
 
-	public GameLobby(int width, int height, GameClient client) {
+	public GameLobby(JFrame frame, int width, int height, GameClient client) {
 		// Set Variables
+		this.frame = frame;
 		frameWidth = width;
 		frameHeight = height;
 		this.client = client;
 
 		// Frame
-		frame = new JFrame("Fakeopoly - Game Lobby");
+		frame.setTitle("Fakeopoly - Game Lobby");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(frameWidth, frameHeight);
-		frame.setLocationRelativeTo(null); // Centers screen
 		frame.setResizable(false);
 
 		// Panel
@@ -162,7 +162,6 @@ public class GameLobby {
 		try {
 			client.getPlayerService().deletePlayer(client.getClientId());
 			client.openMainMenu();
-			frame.dispose();
 		} catch (RemoteException e) {
 			System.out.println(e);
 		}
@@ -192,7 +191,10 @@ public class GameLobby {
 	}
 
 	public void startGame() {
-		frame.dispose();
-		client.openGameView();
+		try {
+			client.openGameView();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 }
