@@ -211,6 +211,8 @@ public class FindServer {
                     throw new Exception("Connection to server failed.");
                 client.openGameLobby();
                 frame.dispose();
+                client.getPlayerService().updatePlayerList();
+                client.getPlayerService().UpdateMessageBoard();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(frame, e);
             }

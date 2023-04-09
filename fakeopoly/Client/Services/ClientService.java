@@ -2,18 +2,26 @@ package Client.Services;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
+import Client.GameClient;
 import Shared.Interfaces.ClientServiceIF;
+import Shared.Objects.Message;
 
 public class ClientService extends UnicastRemoteObject implements ClientServiceIF {
+    private GameClient gameClient;
 
-    public ClientService() throws RemoteException {
+    public ClientService(GameClient gameClient) throws RemoteException {
         super();
+        this.gameClient = gameClient;
     }
 
-    @Override
-    public void testMessage() throws RemoteException {
-        System.out.println("This should only display on this client.");
+    public void updatePlayerList(String[] playerNames) throws RemoteException {
+        gameClient.getGameLobby().setPlayerList(playerNames);
+    }
+
+    public void updateMessageBoard(ArrayList<Message> messages) throws RemoteException {
+        gameClient.getGameLobby().setMessageBoard(messages);
     }
 
 }

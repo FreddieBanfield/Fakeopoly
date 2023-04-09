@@ -4,10 +4,14 @@ import java.awt.Color;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import Shared.Objects.Message;
+
 public interface PlayerServiceIF extends Remote {
 
     // Declaring the method prototype
     public int getNumberOfPlayers() throws RemoteException;
+
+    public void updatePlayerList() throws RemoteException;
 
     public int createPlayer(String name, Color color) throws RemoteException;
 
@@ -18,4 +22,8 @@ public interface PlayerServiceIF extends Remote {
     public Color getColorById(int id) throws RemoteException;
 
     public void deletePlayer(int id) throws RemoteException;
+
+    public void addMessage(Message message) throws RemoteException;
+
+    public void UpdateMessageBoard() throws RemoteException;
 }

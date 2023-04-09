@@ -68,7 +68,7 @@ public class GameClient {
             // Create an object of the interface
             setClientAddress("localhost");
             setClientPort(getServerPort() + getClientId() + 1);
-            _clientService = new ClientService();
+            _clientService = new ClientService(this);
             // Create rmi registry within the server JVM
             LocateRegistry.createRegistry(getClientPort());
             // Binds the remote object by the name
@@ -166,6 +166,13 @@ public class GameClient {
      */
     public PlayerServiceIF getPlayerService() {
         return _playerService;
+    }
+
+    /**
+     * Gets the _playerService.
+     */
+    public GameLobby getGameLobby() {
+        return gameLobby;
     }
 
     /**

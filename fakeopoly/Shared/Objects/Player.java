@@ -42,12 +42,11 @@ public class Player implements Serializable {
     }
 
     // getters and setters
+    public ClientServiceIF getClient() {
+        return _clientService;
+    }
+
     public String getName() {
-        try {
-            _clientService.testMessage();
-        } catch (RemoteException e) {
-            System.out.println(e);
-        }
         return name;
     }
 

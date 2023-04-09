@@ -6,14 +6,17 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 import Shared.Interfaces.*;
+import Shared.Objects.Message;
 import Shared.Objects.Player;
 
 public class PlayerService extends UnicastRemoteObject implements PlayerServiceIF {
     private ArrayList<Player> players;
+    private ArrayList<Message> messages;
 
-    public PlayerService(ArrayList<Player> players) throws RemoteException {
+    public PlayerService(ArrayList<Player> players, ArrayList<Message> messages) throws RemoteException {
         super();
         this.players = players;
+        this.messages = messages;
     }
 
     @Override
@@ -53,6 +56,20 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     }
 
     @Override
+    public void updatePlayerList() throws RemoteException {
+        // Get list of player names
+        String[] playerNames = new String[players.size()];
+        for (int i = 0; i < players.size(); i++) {
+            playerNames[i] = players.get(i).getName();
+        }
+
+        // Send update to each client
+        for (Player player : players) {
+            player.getClient().updatePlayerList(playerNames);
+        }
+    }
+
+    @Override
     public String getNameById(int id) throws RemoteException {
         return players.get(id).getName();
     }
@@ -65,5 +82,18 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     @Override
     public void deletePlayer(int id) throws RemoteException {
         players.set(id, null);
+    }
+
+    @Override
+    public void addMessage(Message message) throws RemoteException {
+        messages.add(message);
+        UpdateMessageBoard();
+    }
+
+    @Override
+    public void UpdateMessageBoard() throws RemoteException {
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).getClient().updateMessageBoard(messages);
+        }
     }
 }

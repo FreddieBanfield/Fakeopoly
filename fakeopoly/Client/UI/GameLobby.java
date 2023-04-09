@@ -4,15 +4,20 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import Client.GameClient;
+import Shared.Objects.Message;
 
 public class GameLobby {
 
@@ -22,6 +27,7 @@ public class GameLobby {
 	private GameClient client;
 
 	private JPanel panel;
+	private JScrollPane messageBoard;
 	private JTextArea namesTA;
 	private JTextArea messagesTA;
 	private JTextField messageTF;
@@ -51,16 +57,30 @@ public class GameLobby {
 		namesTA.setEditable(false);
 
 		messagesTA = new JTextArea();
-		messagesTA.setBounds(frameWidth / 2 - 120, 50, 340, 270);
+		messagesTA.setBounds(0, 0, 340, 270);
 		messagesTA.setText("");
 		messagesTA.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 		messagesTA.setEditable(false);
 
+		messageBoard = new JScrollPane(messagesTA);
+		messageBoard.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		messageBoard.setBounds(frameWidth / 2 - 120, 50, 340, 270);
+
 		messageTF = new JTextField();
-		messageTF.setBounds(frameWidth / 2 - 120, 320, 340, 30);
+		messageTF.setBounds(frameWidth / 2 - 120, 320, 310, 30);
 		messageTF.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+		messageTF.setBackground(Color.LIGHT_GRAY);
 
 		// Buttons
+		JButton sendMessageBtn = new JButton("Send");
+		sendMessageBtn.setBounds(frameWidth / 2 + 190, 320, 30, 30);
+		sendMessageBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sendMessageAction();
+			}
+		});
+
 		JButton readyBtn = new JButton("Ready");
 		readyBtn.setBounds(frameWidth / 2 - 220, 420, 200, 40);
 		readyBtn.addActionListener(new ActionListener() {
@@ -81,8 +101,9 @@ public class GameLobby {
 
 		// Add Components to Panel
 		panel.add(namesTA);
-		panel.add(messagesTA);
+		panel.add(messageBoard);
 		panel.add(messageTF);
+		panel.add(sendMessageBtn);
 		panel.add(readyBtn);
 		panel.add(backBtn);
 
@@ -96,13 +117,19 @@ public class GameLobby {
 		return frame;
 	}
 
-	// Action when user clicks back button
-	private void backBtnAction() {
-		System.out.println("Opening Main Menu page.");
+	public void sendMessageAction() {
+		String playerName;
 		try {
-			client.getPlayerService().deletePlayer(client.getClientId());
-			client.openMainMenu();
-			frame.dispose();
+			// Create Message object
+			playerName = client.getPlayerService().getNameById(client.getClientId());
+			String messageContent = messageTF.getText();
+			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+			Date date = new Date();
+			String time = formatter.format(date);
+			Message message = new Message(playerName, messageContent, time);
+
+			client.getPlayerService().addMessage(message);
+			messageTF.setText("");
 		} catch (RemoteException e) {
 			System.out.println(e);
 		}
@@ -118,18 +145,49 @@ public class GameLobby {
 			readyBtn.setBackground(null);
 		}
 
+		// Update readiness of player
+		/*
+		 * try {
+		 * 
+		 * } catch (RemoteException e) {
+		 * readyBtn.setBackground(null);
+		 * System.out.println(e);
+		 * }
+		 */
+	}
+
+	// Action when user clicks back button
+	private void backBtnAction() {
+		System.out.println("Opening Main Menu page.");
 		try {
-			String allNames = "";
-			int nop = client.getPlayerService().getNumberOfPlayers();
-			for (int i = 0; i < nop; i++) {
-				allNames += client.getPlayerService().getNameById(i) + "\n";
-			}
-			namesTA.setText(allNames);
-			panel.repaint();
-			panel.revalidate();
+			client.getPlayerService().deletePlayer(client.getClientId());
+			client.openMainMenu();
+			frame.dispose();
 		} catch (RemoteException e) {
-			readyBtn.setBackground(null);
 			System.out.println(e);
 		}
+	}
+
+	// ------------ Getters and Setters -----------------
+
+	public void setPlayerList(String[] playerNames) {
+		String result = "Players:\n-----------\n\n";
+		for (int i = 0; i < playerNames.length; i++) {
+			result += playerNames[i] + "\n";
+		}
+		namesTA.setText(result);
+		panel.repaint();
+		panel.revalidate();
+	}
+
+	public void setMessageBoard(ArrayList<Message> messages) {
+		String result = "Message Board\n---------------------\n\n";
+		for (Message message : messages) {
+			result += message.getPlayerName() + ": " + message.getTime() + "\n";
+			result += message.getMessage() + "\n\n";
+		}
+		messagesTA.setText(result);
+		panel.repaint();
+		panel.revalidate();
 	}
 }
