@@ -43,6 +43,7 @@ public class GameClient {
         frame.setLocationRelativeTo(null); // Centers screen
         frame.setResizable(false);
         openMainMenu();
+        //openGameView();
     }
 
     public void openMainMenu() {

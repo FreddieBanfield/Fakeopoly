@@ -30,4 +30,8 @@ public interface PlayerServiceIF extends Remote {
     public void setIsReadyById(Boolean isReady, int id) throws RemoteException;
 
     public Boolean getIsReadyById(int id) throws RemoteException;
+
+    public int getTotalPlayers() throws RemoteException;
+    
+    public int getMoneyById(int id) throws RemoteException;
 }

@@ -3,6 +3,8 @@ package Client.UI;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,13 +14,15 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Client.GameClient;
 
 public class GameView {
-    private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
-
+    //private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
+    //Brady's filepath for whatever reason
+    private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
     private JFrame frame;
     private int frameWidth;
     private int frameHeight;
@@ -26,6 +30,14 @@ public class GameView {
     private BufferedImage boardImages[];
     private ImageIcon boardImagesScaled[];
     private JButton boardTiles[];
+    private JButton rollDice;
+    private JButton endTurn;
+    private JButton manageProperties;
+    private JLabel[] playerDetails;
+
+    private JPanel controlsPanel = new JPanel();
+    private JPanel boardPanel = new JPanel();
+    private JPanel mainPanel = new JPanel();
 
     private int imagesNum = 40;
     private double imageScale = 1.25;
@@ -47,25 +59,36 @@ public class GameView {
         frame.setResizable(false);
 
         // Panel
-        JPanel mainPanel = new JPanel();
+
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
-        JPanel boardPanel = new JPanel();
+
         boardPanel.setLayout(null);
         boardPanel.setBackground(Color.gray);
         boardPanel.setPreferredSize(new Dimension(width + 100, frameHeight));
-        JPanel controlsPanel = new JPanel();
+
         controlsPanel.setLayout(null);
-        boardPanel.setPreferredSize(new Dimension(470, frameHeight));
+        controlsPanel.setPreferredSize(new Dimension(370, frameHeight));
+
 
         // Components
         loadPropertyImages();
         createBoard();
+        setControlPanelButtons();
+        setControlPanelChat();
+        setControlPanelPlayerDetails();
 
         // Add JButtons to panel
         for (int i = 0; i < imagesNum; i++) {
             boardPanel.add(boardTiles[i]);
         }
 
+        //add compontents to control panel
+        controlsPanel.add(rollDice);
+        controlsPanel.add(endTurn);
+        controlsPanel.add(manageProperties);
+        for(int i = 0; i < playerDetails.length; i++){
+            controlsPanel.add(playerDetails[i]);
+        }
         // Add Components to Panel
         mainPanel.add(boardPanel);
         mainPanel.add(controlsPanel);
@@ -74,7 +97,62 @@ public class GameView {
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
     }
+    private void setControlPanelChat(){
+    }
+    private void setControlPanelPlayerDetails(){
+        try{
+            playerDetails = new JLabel[client.getPlayerService().getTotalPlayers()];
+            //playerDetails = new JLabel[2];
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        int startingX = 370/10;
+        int startingY = frameHeight - 750;
+        int width = 300;
+        int height = 70;
+        int yOffset = height + 15;
+        for(int i = 0; i < playerDetails.length; i++){
+            try{
+                int money = client.getPlayerService().getMoneyById(i);
+                Color colour = client.getPlayerService().getColorById(i);
+                String name = client.getPlayerService().getNameById(i).toString();
+                JButton color = new JButton();
+                color.setBackground(colour);
+                color.setOpaque(true);
+                color.setBounds(startingX - 27,startingY + (yOffset * i) + 15,20,20);
+                color.setEnabled(false);
 
+                controlsPanel.add(color);
+                playerDetails[i] = new JLabel("<html>Player: " + name + " &nbsp &nbsp Money: " + money + " <br/></br>Properties: <html>");
+                //playerDetails[i].setForeground(colour);
+                playerDetails[i].setBounds(startingX,startingY + (yOffset * i),width,height);
+            }catch(Exception e ){
+                System.out.println(e);
+            }
+
+
+        }
+    }
+    private void setControlPanelButtons(){
+        rollDice = new JButton("Roll Dice");
+        int x = 370/6;
+        int offset = 0;
+        rollDice.setBounds(x + offset, frameHeight - 135, 300, 40);
+        rollDice.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//roll dice
+                //getDiceRoll();
+			}
+		});
+        endTurn = new JButton("End Turn");
+        endTurn.setBounds(x + offset,frameHeight - 90 , 300, 40);
+        endTurn.setEnabled(false);
+
+        manageProperties = new JButton("Manage Properties");
+        manageProperties.setBounds(x + offset,frameHeight - 180 , 300, 40);
+        
+    }
     private void loadPropertyImages() {
         // Get images from folder and store as buffered image
         try {
@@ -136,7 +214,7 @@ public class GameView {
             boardTiles[i] = new JButton(boardImagesScaled[i]);
         }
         // Set location and size of JButton
-        int starting_x = 630;
+        int starting_x = 597;
         int starting_y = 590;
         int wide_w = (int) (boardImages[0].getWidth() / imageScale);
         int wide_h = (int) (boardImages[0].getHeight() / imageScale);

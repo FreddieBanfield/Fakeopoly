@@ -12,6 +12,7 @@ import Shared.Objects.Player;
 public class PlayerService extends UnicastRemoteObject implements PlayerServiceIF {
     private ArrayList<Player> players;
     private ArrayList<Message> messages;
+    private int totalPlayers;
 
     public PlayerService(ArrayList<Player> players, ArrayList<Message> messages) throws RemoteException {
         super();
@@ -74,7 +75,10 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     public String getNameById(int id) throws RemoteException {
         return players.get(id).getName();
     }
-
+    @Override
+    public int getMoneyById(int id) throws RemoteException {
+        return players.get(id).getMoney();
+    }
     @Override
     public Color getColorById(int id) throws RemoteException {
         return players.get(id).getColor();
@@ -111,7 +115,8 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     }
 
     private void checkIfAllPlayersAreReady() throws RemoteException {
-        int readyPlayers = 0, totalPlayers = 0;
+        int readyPlayers = 0;
+        totalPlayers = 0;
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i) != null) {
                 totalPlayers++;
@@ -127,5 +132,9 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                     players.get(i).getClient().startGame();
             }
         }
+    }
+    @Override
+    public int getTotalPlayers(){
+        return totalPlayers;
     }
 }
