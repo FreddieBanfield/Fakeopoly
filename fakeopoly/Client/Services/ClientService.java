@@ -24,4 +24,8 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
         gameClient.getGameLobby().setMessageBoard(messages);
     }
 
+    public void startGame() throws RemoteException {
+        gameClient.getGameLobby().startGame();
+    }
+
 }

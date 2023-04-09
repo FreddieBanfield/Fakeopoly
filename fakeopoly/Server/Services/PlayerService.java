@@ -98,4 +98,34 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                 players.get(i).getClient().updateMessageBoard(messages);
         }
     }
+
+    @Override
+    public Boolean getIsReadyById(int id) throws RemoteException {
+        return players.get(id).getIsReady();
+    }
+
+    @Override
+    public void setIsReadyById(Boolean isReady, int id) throws RemoteException {
+        players.get(id).setIsReady(isReady);
+        checkIfAllPlayersAreReady();
+    }
+
+    private void checkIfAllPlayersAreReady() throws RemoteException {
+        int readyPlayers = 0, totalPlayers = 0;
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i) != null) {
+                totalPlayers++;
+                if (getIsReadyById(i) == true) {
+                    readyPlayers++;
+                }
+            }
+        }
+
+        if (totalPlayers == readyPlayers && totalPlayers > 1) {
+            for (int i = 0; i < players.size(); i++) {
+                if (players.get(i) != null)
+                    players.get(i).getClient().startGame();
+            }
+        }
+    }
 }

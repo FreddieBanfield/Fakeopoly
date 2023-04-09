@@ -139,21 +139,21 @@ public class GameLobby {
 	private void readyBtnAction(JButton readyBtn) {
 		// Set color of button to symbolize readiness
 		Color readyColor = new Color(184, 207, 229);
-		if (readyBtn.getBackground() == new JButton().getBackground()) {
-			readyBtn.setBackground(readyColor);
-		} else {
-			readyBtn.setBackground(null);
-		}
 
 		// Update readiness of player
-		/*
-		 * try {
-		 * 
-		 * } catch (RemoteException e) {
-		 * readyBtn.setBackground(null);
-		 * System.out.println(e);
-		 * }
-		 */
+		try {
+			if (readyBtn.getBackground() == new JButton().getBackground()) {
+				client.getPlayerService().setIsReadyById(true, client.getClientId());
+				readyBtn.setBackground(readyColor);
+			} else {
+				client.getPlayerService().setIsReadyById(false, client.getClientId());
+				readyBtn.setBackground(null);
+			}
+		} catch (RemoteException e) {
+			readyBtn.setBackground(null);
+			System.out.println(e);
+		}
+
 	}
 
 	// Action when user clicks back button
@@ -189,5 +189,10 @@ public class GameLobby {
 		messagesTA.setText(result);
 		panel.repaint();
 		panel.revalidate();
+	}
+
+	public void startGame() {
+		frame.dispose();
+		client.openGameView();
 	}
 }

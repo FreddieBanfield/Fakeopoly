@@ -26,4 +26,8 @@ public interface PlayerServiceIF extends Remote {
     public void addMessage(Message message) throws RemoteException;
 
     public void UpdateMessageBoard() throws RemoteException;
+
+    public void setIsReadyById(Boolean isReady, int id) throws RemoteException;
+
+    public Boolean getIsReadyById(int id) throws RemoteException;
 }
