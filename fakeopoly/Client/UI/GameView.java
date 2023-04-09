@@ -58,8 +58,26 @@ public class GameView {
         boardPanel.setPreferredSize(new Dimension(470, frameHeight));
 
         // Components
+        loadPropertyImages();
+        createBoard();
+
+        // Add JButtons to panel
+        for (int i = 0; i < imagesNum; i++) {
+            boardPanel.add(boardTiles[i]);
+        }
+
+        // Add Components to Panel
+        mainPanel.add(boardPanel);
+        mainPanel.add(controlsPanel);
+
+        // Add Panel to Frame
+        frame.setContentPane(mainPanel);
+        frame.setVisible(true);
+    }
+
+    private void loadPropertyImages() {
+        // Get images from folder and store as buffered image
         try {
-            // Get images from folder and store as buffered image
             boardImages[0] = ImageIO.read(new File(BOARDPATH + "monopoly_board_Go.jpg"));
             boardImages[1] = ImageIO.read(new File(BOARDPATH + "monopoly_board_Buildings_brown.png"));
             boardImages[2] = ImageIO.read(new File(BOARDPATH + "monopoly_board_Chest_bot.jpg"));
@@ -100,72 +118,61 @@ public class GameView {
             boardImages[37] = ImageIO.read(new File(BOARDPATH + "monopoly_board_Buildings_DarkBlue.png"));
             boardImages[38] = ImageIO.read(new File(BOARDPATH + "monopoly_board_LuxuryTax.jpg"));
             boardImages[39] = ImageIO.read(new File(BOARDPATH + "monopoly_board_Buildings_DarkBlue.png"));
-
-            // Scale images and save as ImageIcons
-            for (int i = 0; i < imagesNum; i++) {
-                boardImagesScaled[i] = new ImageIcon(
-                        boardImages[i].getScaledInstance((int) (boardImages[i].getWidth() / imageScale),
-                                (int) (boardImages[i].getHeight() / imageScale), Image.SCALE_SMOOTH));
-            }
-
-            // Set image to JButton
-            for (int i = 0; i < imagesNum; i++) {
-                boardTiles[i] = new JButton(boardImagesScaled[i]);
-            }
-            // Set location and size of JButton
-            int starting_x = 630;
-            int starting_y = 590;
-            int wide_w = (int) (boardImages[0].getWidth() / imageScale);
-            int wide_h = (int) (boardImages[0].getHeight() / imageScale);
-            int slim_w = (int) (boardImages[1].getWidth() / imageScale);
-            int slim_h = (int) (boardImages[0].getHeight() / imageScale);
-
-            for (int i = 0; i < imagesNum; i++) {
-                if (i < 10) {
-                    if (i == 0)
-                        boardTiles[i].setBounds(starting_x, starting_y, wide_w, wide_h);
-                    else
-                        boardTiles[i].setBounds(starting_x - i * slim_w, starting_y, slim_w, slim_h);
-                } else if (i < 20) {
-                    if (i == 10)
-                        boardTiles[i].setBounds(starting_x - 9 * slim_w - wide_w, starting_y, wide_w, wide_h);
-                    else
-                        boardTiles[i].setBounds(starting_x - 9 * slim_w - wide_w, starting_y - (i - 10) * slim_w,
-                                slim_h, slim_w);
-                } else if (i < 30) {
-                    if (i == 20)
-                        boardTiles[i].setBounds(starting_x - 9 * slim_w - wide_w, starting_y - 9 * slim_w - wide_h,
-                                wide_w, wide_h);
-                    else
-                        boardTiles[i].setBounds(starting_x - 10 * slim_w + (i - 20) * slim_w,
-                                starting_y - 9 * slim_w - wide_h,
-                                slim_w, slim_h);
-                } else if (i < 40) {
-                    if (i == 30)
-                        boardTiles[i].setBounds(starting_x, starting_y - 9 * slim_w - wide_h,
-                                wide_w, wide_h);
-                    else
-                        boardTiles[i].setBounds(starting_x,
-                                starting_y - 10 * slim_w + (i - 30) * slim_w,
-                                slim_h, slim_w);
-                }
-            }
-
-            // Add JButtons to panel
-            for (int i = 0; i < imagesNum; i++) {
-                boardPanel.add(boardTiles[i]);
-            }
         } catch (IOException e) {
             System.out.println(e);
         }
+    }
 
-        // Add Components to Panel
-        mainPanel.add(boardPanel);
-        mainPanel.add(controlsPanel);
+    private void createBoard() {
+        // Scale images and save as ImageIcons
+        for (int i = 0; i < imagesNum; i++) {
+            boardImagesScaled[i] = new ImageIcon(
+                    boardImages[i].getScaledInstance((int) (boardImages[i].getWidth() / imageScale),
+                            (int) (boardImages[i].getHeight() / imageScale), Image.SCALE_SMOOTH));
+        }
 
-        // Add Panel to Frame
-        frame.setContentPane(mainPanel);
-        frame.setVisible(true);
+        // Set image to JButton
+        for (int i = 0; i < imagesNum; i++) {
+            boardTiles[i] = new JButton(boardImagesScaled[i]);
+        }
+        // Set location and size of JButton
+        int starting_x = 630;
+        int starting_y = 590;
+        int wide_w = (int) (boardImages[0].getWidth() / imageScale);
+        int wide_h = (int) (boardImages[0].getHeight() / imageScale);
+        int slim_w = (int) (boardImages[1].getWidth() / imageScale);
+        int slim_h = (int) (boardImages[0].getHeight() / imageScale);
+
+        for (int i = 0; i < imagesNum; i++) {
+            if (i < 10) {
+                if (i == 0)
+                    boardTiles[i].setBounds(starting_x, starting_y, wide_w, wide_h);
+                else
+                    boardTiles[i].setBounds(starting_x - i * slim_w, starting_y, slim_w, slim_h);
+            } else if (i < 20) {
+                if (i == 10)
+                    boardTiles[i].setBounds(starting_x - 9 * slim_w - wide_w, starting_y, wide_w, wide_h);
+                else
+                    boardTiles[i].setBounds(starting_x - 9 * slim_w - wide_w, starting_y - (i - 10) * slim_w,
+                            slim_h, slim_w);
+            } else if (i < 30) {
+                if (i == 20)
+                    boardTiles[i].setBounds(starting_x - 9 * slim_w - wide_w, starting_y - 9 * slim_w - wide_h,
+                            wide_w, wide_h);
+                else
+                    boardTiles[i].setBounds(starting_x - 10 * slim_w + (i - 20) * slim_w,
+                            starting_y - 9 * slim_w - wide_h,
+                            slim_w, slim_h);
+            } else if (i < 40) {
+                if (i == 30)
+                    boardTiles[i].setBounds(starting_x, starting_y - 9 * slim_w - wide_h,
+                            wide_w, wide_h);
+                else
+                    boardTiles[i].setBounds(starting_x,
+                            starting_y - 10 * slim_w + (i - 30) * slim_w,
+                            slim_h, slim_w);
+            }
+        }
     }
 
     // Gets Frame
