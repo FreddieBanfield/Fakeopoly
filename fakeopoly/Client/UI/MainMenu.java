@@ -17,17 +17,17 @@ public class MainMenu {
     private int frameHeight;
     private GameClient client;
 
-    public MainMenu(int width, int height, GameClient client) {
+    public MainMenu(JFrame frame, int width, int height, GameClient client) {
         // Set Variables
+        this.frame = frame;
         frameWidth = width;
         frameHeight = height;
         this.client = client;
 
         // Frame
-        frame = new JFrame("Fakeopoly - Main Menu");
+        frame.setTitle("Fakeopoly - Main Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(frameWidth, frameHeight);
-        frame.setLocationRelativeTo(null); // Centers screen
         frame.setResizable(false);
 
         // Panel
@@ -42,7 +42,6 @@ public class MainMenu {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Opening Find Server page.");
                 client.openFindServer();
-                frame.dispose();
             }
         });
 

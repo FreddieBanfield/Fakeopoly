@@ -20,11 +20,13 @@ public class Player implements Serializable {
     private double money;
     private Property[] properties;
     private ClientServiceIF _clientService;
+    private boolean isReady;
 
     // constructor
     public Player(String name, Color color) {
         this.name = name;
         this.color = color;
+        this.isReady = false;
     }
 
     public boolean connectClient(String clientAddress, int clientPort, int id) {
@@ -60,6 +62,14 @@ public class Player implements Serializable {
 
     public void setMoney(double money) {
         this.money = money;
+    }
+
+    public Boolean getIsReady() {
+        return isReady;
+    }
+
+    public void setIsReady(Boolean isReady) {
+        this.isReady = isReady;
     }
 
 }

@@ -26,6 +26,7 @@ public class GameClient {
     private ClientService _clientService;
 
     // UI
+    private JFrame frame;
     private int FRAMEWIDTH = 600;
     private int FRAMEHEIGHT = 600;
     private MainMenu mainMenu;
@@ -36,23 +37,28 @@ public class GameClient {
 
     // constructor
     public GameClient() {
+        frame = new JFrame("Loading...");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
+        frame.setLocationRelativeTo(null); // Centers screen
+        frame.setResizable(false);
         openMainMenu();
     }
 
     public void openMainMenu() {
-        mainMenu = new MainMenu(FRAMEWIDTH, FRAMEHEIGHT, this);
+        mainMenu = new MainMenu(frame, FRAMEWIDTH, FRAMEHEIGHT, this);
     }
 
     public void openFindServer() {
-        findServer = new FindServer(FRAMEWIDTH, FRAMEHEIGHT, this);
+        findServer = new FindServer(frame, FRAMEWIDTH, FRAMEHEIGHT, this);
     }
 
     public void openGameView() {
-        gameView = new GameView(FRAMEWIDTH, FRAMEHEIGHT, this);
+        gameView = new GameView(frame, FRAMEWIDTH, FRAMEHEIGHT, this);
     }
 
     public void openGameLobby() {
-        gameLobby = new GameLobby(FRAMEWIDTH, FRAMEHEIGHT, this);
+        gameLobby = new GameLobby(frame, FRAMEWIDTH, FRAMEHEIGHT, this);
     }
 
     public Boolean connectToServer(String playerName, Color playerColor) {

@@ -36,8 +36,9 @@ public class FindServer {
 
     private Color playerColor;
 
-    public FindServer(int width, int height, GameClient client) {
+    public FindServer(JFrame frame, int width, int height, GameClient client) {
         // Set Variables
+        this.frame = frame;
         frameWidth = width;
         frameHeight = height;
         this.client = client;
@@ -45,10 +46,9 @@ public class FindServer {
         playerColor = Color.WHITE;
 
         // Frame
-        frame = new JFrame("Fakeopoly - Find Server");
+        frame.setTitle("Fakeopoly - Find Server");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(frameWidth, frameHeight);
-        frame.setLocationRelativeTo(null); // Centers screen
         frame.setResizable(false);
 
         // Panel
@@ -210,7 +210,6 @@ public class FindServer {
                 if (!client.connectToServer(playerNameTF.getText(), playerColor))
                     throw new Exception("Connection to server failed.");
                 client.openGameLobby();
-                frame.dispose();
                 client.getPlayerService().updatePlayerList();
                 client.getPlayerService().UpdateMessageBoard();
             } catch (Exception e) {
@@ -223,7 +222,6 @@ public class FindServer {
     private void backBtnAction() {
         System.out.println("Opening Main Menu page.");
         client.openMainMenu();
-        frame.dispose();
     }
 
     // Action when user clicks color button
