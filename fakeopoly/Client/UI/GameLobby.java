@@ -1,16 +1,15 @@
 package Client.UI;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import Client.GameClient;
 
@@ -22,7 +21,7 @@ public class GameLobby {
 	private GameClient client;
 
 	private JPanel panel;
-	private JLabel namesLbl;
+	private JTextArea namesTA;
 
 	public GameLobby(int width, int height, GameClient client) {
 		// Set Variables
@@ -42,26 +41,19 @@ public class GameLobby {
 		panel.setLayout(null);
 
 		// Components
-		namesLbl = new JLabel();
-		namesLbl.setBounds(100, 100, 300, 30);
-		namesLbl.setText("Names: ");
+		namesTA = new JTextArea();
+		namesTA.setBounds(frameWidth / 2 - 220, 50, 100, 300);
+		namesTA.setText("Names: ");
+		namesTA.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+		namesTA.setEditable(false);
 
 		// Buttons
-		JButton singleBtn = new JButton("Single");
-		singleBtn.setBounds(frameWidth / 2 - 220, 320, 200, 40);
-		singleBtn.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				singleBtnAction();
-			}
-		});
-
 		JButton readyBtn = new JButton("Ready");
 		readyBtn.setBounds(frameWidth / 2 - 220, 420, 200, 40);
 		readyBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				readyBtnAction();
+				readyBtnAction(readyBtn);
 			}
 		});
 
@@ -75,8 +67,7 @@ public class GameLobby {
 		});
 
 		// Add Components to Panel
-		panel.add(namesLbl);
-		panel.add(singleBtn);
+		panel.add(namesTA);
 		panel.add(readyBtn);
 		panel.add(backBtn);
 
@@ -102,29 +93,27 @@ public class GameLobby {
 		}
 	}
 
-	// Delete when done with testing
-	private void singleBtnAction() {
-		try {
-			namesLbl.setText(client.getPlayerService().getNameById(client.getClientId()));
-			panel.repaint();
-			panel.revalidate();
-		} catch (RemoteException e) {
-			System.out.println(e);
-		}
-	}
-
 	// Readies a player and updates server
-	private void readyBtnAction() {
+	private void readyBtnAction(JButton readyBtn) {
+		// Set color of button to symbolize readiness
+		Color readyColor = new Color(184, 207, 229);
+		if (readyBtn.getBackground() == new JButton().getBackground()) {
+			readyBtn.setBackground(readyColor);
+		} else {
+			readyBtn.setBackground(null);
+		}
+
 		try {
 			String allNames = "";
 			int nop = client.getPlayerService().getNumberOfPlayers();
 			for (int i = 0; i < nop; i++) {
-				allNames += client.getPlayerService().getNameById(i) + " ";
+				allNames += client.getPlayerService().getNameById(i) + "\n";
 			}
-			namesLbl.setText(allNames);
+			namesTA.setText(allNames);
 			panel.repaint();
 			panel.revalidate();
 		} catch (RemoteException e) {
+			readyBtn.setBackground(null);
 			System.out.println(e);
 		}
 	}
