@@ -58,7 +58,6 @@ public class GameView {
         boardPanel.setPreferredSize(new Dimension(470, frameHeight));
 
         // Components
-        loadPropertyImages();
         createBoard();
 
         // Add JButtons to panel
@@ -124,6 +123,8 @@ public class GameView {
     }
 
     private void createBoard() {
+        loadPropertyImages();
+
         // Scale images and save as ImageIcons
         for (int i = 0; i < imagesNum; i++) {
             boardImagesScaled[i] = new ImageIcon(
