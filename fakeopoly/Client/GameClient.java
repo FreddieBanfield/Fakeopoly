@@ -38,7 +38,10 @@ public class GameClient {
     // constructor
     public GameClient() {
         frame = new JFrame("Loading...");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
         frame.setLocationRelativeTo(null); // Centers screen
+        frame.setResizable(false);
         openMainMenu();
     }
 
