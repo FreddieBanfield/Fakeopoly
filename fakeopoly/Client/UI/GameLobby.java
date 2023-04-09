@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import Client.GameClient;
 
@@ -22,6 +23,8 @@ public class GameLobby {
 
 	private JPanel panel;
 	private JTextArea namesTA;
+	private JTextArea messagesTA;
+	private JTextField messageTF;
 
 	public GameLobby(int width, int height, GameClient client) {
 		// Set Variables
@@ -47,6 +50,16 @@ public class GameLobby {
 		namesTA.setBorder(BorderFactory.createLineBorder(Color.black, 2));
 		namesTA.setEditable(false);
 
+		messagesTA = new JTextArea();
+		messagesTA.setBounds(frameWidth / 2 - 120, 50, 340, 270);
+		messagesTA.setText("");
+		messagesTA.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+		messagesTA.setEditable(false);
+
+		messageTF = new JTextField();
+		messageTF.setBounds(frameWidth / 2 - 120, 320, 340, 30);
+		messageTF.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+
 		// Buttons
 		JButton readyBtn = new JButton("Ready");
 		readyBtn.setBounds(frameWidth / 2 - 220, 420, 200, 40);
@@ -68,6 +81,8 @@ public class GameLobby {
 
 		// Add Components to Panel
 		panel.add(namesTA);
+		panel.add(messagesTA);
+		panel.add(messageTF);
 		panel.add(readyBtn);
 		panel.add(backBtn);
 
