@@ -2,12 +2,13 @@ package Client;
 
 import java.awt.Color;
 import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
 
 import javax.swing.JFrame;
 
+import Client.Services.ClientService;
 import Client.UI.*;
 import Shared.Interfaces.PlayerServiceIF;
-import Shared.Objects.Player;
 
 public class GameClient {
 
@@ -16,8 +17,13 @@ public class GameClient {
     private String serverAddress;
     private int serverPort;
 
+    // Client
+    private String clientAddress;
+    private int clientPort;
+
     // API
-    PlayerServiceIF _playerService;
+    private PlayerServiceIF _playerService;
+    private ClientService _clientService;
 
     // UI
     private int FRAMEWIDTH = 600;
@@ -51,11 +57,31 @@ public class GameClient {
 
     public Boolean connectToServer(String playerName, Color playerColor) {
         try {
-            // lookup method to find reference of remote object
+            // Setup connections with Server APIs
             _playerService = (PlayerServiceIF) Naming
-                    .lookup("rmi://" + getServerAddress() + ":" + serverPort + "/PlayerService");
+                    .lookup("rmi://" + getServerAddress() + ":" + getServerPort() + "/PlayerService");
 
+            // Create Player object on server
             setClientId(_playerService.createPlayer(playerName, playerColor));
+
+            // Setup Local API connection for Server
+            // Create an object of the interface
+            setClientAddress("localhost");
+            setClientPort(getServerPort() + getClientId() + 1);
+            _clientService = new ClientService(this);
+            // Create rmi registry within the server JVM
+            LocateRegistry.createRegistry(getClientPort());
+            // Binds the remote object by the name
+            Naming.rebind("rmi://" + getClientAddress() + ":" + getClientPort() + "/" + playerName + getClientId(),
+                    _clientService);
+
+            // Connects client to Server
+            boolean connectClientToServerWasSuccessful = _playerService.connectClient(getClientAddress(),
+                    getClientPort(), getClientId());
+
+            if (!connectClientToServerWasSuccessful)
+                throw new Exception("Could not connect client to server");
+
             System.out.println("Player Name: " + _playerService.getNameById(id) + ", Player Color: "
                     + _playerService.getColorById(id));
             return true;
@@ -94,6 +120,34 @@ public class GameClient {
     }
 
     /**
+     * Gets the server address.
+     */
+    public String getClientAddress() {
+        return clientAddress;
+    }
+
+    /**
+     * Sets the server address.
+     */
+    public void setClientAddress(String address) {
+        clientAddress = address;
+    }
+
+    /**
+     * Gets the server port.
+     */
+    public int getClientPort() {
+        return clientPort;
+    }
+
+    /**
+     * Sets the server port.
+     */
+    public void setClientPort(int port) {
+        clientPort = port;
+    }
+
+    /**
      * Gets the client Id.
      */
     public int getClientId() {
@@ -112,6 +166,13 @@ public class GameClient {
      */
     public PlayerServiceIF getPlayerService() {
         return _playerService;
+    }
+
+    /**
+     * Gets the _playerService.
+     */
+    public GameLobby getGameLobby() {
+        return gameLobby;
     }
 
     /**
