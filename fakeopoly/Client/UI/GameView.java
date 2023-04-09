@@ -3,18 +3,23 @@ package Client.UI;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import Client.GameClient;
+import Client.ActionListener.PropertyActionListener;
 
 public class GameView {
     private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
@@ -26,6 +31,10 @@ public class GameView {
     private BufferedImage boardImages[];
     private ImageIcon boardImagesScaled[];
     private JButton boardTiles[];
+
+    private JPanel mainPanel;
+    private JPanel boardPanel;
+    private JPanel controlsPanel;
 
     private int imagesNum = 40;
     private double imageScale = 1.25;
@@ -47,15 +56,17 @@ public class GameView {
         frame.setResizable(false);
 
         // Panel
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
-        JPanel boardPanel = new JPanel();
+
+        boardPanel = new JPanel();
         boardPanel.setLayout(null);
         boardPanel.setBackground(Color.gray);
         boardPanel.setPreferredSize(new Dimension(width + 100, frameHeight));
-        JPanel controlsPanel = new JPanel();
+
+        controlsPanel = new JPanel();
         controlsPanel.setLayout(null);
-        boardPanel.setPreferredSize(new Dimension(470, frameHeight));
+        controlsPanel.setPreferredSize(new Dimension(370, frameHeight));
 
         // Components
         createBoard();
@@ -132,12 +143,14 @@ public class GameView {
                             (int) (boardImages[i].getHeight() / imageScale), Image.SCALE_SMOOTH));
         }
 
-        // Set image to JButton
+        // Set image to JButton and create buttons
         for (int i = 0; i < imagesNum; i++) {
             boardTiles[i] = new JButton(boardImagesScaled[i]);
+            boardTiles[i].addActionListener(new PropertyActionListener(i, this));
         }
+
         // Set location and size of JButton
-        int starting_x = 630;
+        int starting_x = 597;
         int starting_y = 590;
         int wide_w = (int) (boardImages[0].getWidth() / imageScale);
         int wide_h = (int) (boardImages[0].getHeight() / imageScale);
@@ -174,6 +187,28 @@ public class GameView {
                             slim_h, slim_w);
             }
         }
+    }
+
+    public void createPropertyModalInfo(int id) {
+        String title = "Property Title";
+        String contents = "Info on the property";
+        Icon icon = null;
+        Object[] btnOptions = { "Buy House",
+                "Sell House",
+                "Mortgage" };
+
+        showPropertyModal(title, contents, icon, btnOptions);
+    }
+
+    private void showPropertyModal(String title, String contents, Icon icon, Object[] btnOptions) {
+        JOptionPane.showOptionDialog(boardPanel,
+                contents,
+                title,
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                icon,
+                btnOptions,
+                btnOptions[2]);
     }
 
     // Gets Frame
