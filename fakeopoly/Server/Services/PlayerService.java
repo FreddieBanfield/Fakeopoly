@@ -8,14 +8,18 @@ import java.util.ArrayList;
 import Shared.Interfaces.*;
 import Shared.Objects.Message;
 import Shared.Objects.Player;
+import Shared.Objects.Property;
 
 public class PlayerService extends UnicastRemoteObject implements PlayerServiceIF {
     private ArrayList<Player> players;
+    private ArrayList<Property> properties;
     private ArrayList<Message> messages;
 
-    public PlayerService(ArrayList<Player> players, ArrayList<Message> messages) throws RemoteException {
+    public PlayerService(ArrayList<Player> players, ArrayList<Property> properties, ArrayList<Message> messages)
+            throws RemoteException {
         super();
         this.players = players;
+        this.properties = properties;
         this.messages = messages;
     }
 
@@ -127,5 +131,10 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                     players.get(i).getClient().startGame();
             }
         }
+    }
+
+    @Override
+    public Property getPropertyById(int id) throws RemoteException {
+        return properties.get(id);
     }
 }

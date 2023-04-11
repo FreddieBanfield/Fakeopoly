@@ -42,7 +42,7 @@ public class GameClient {
         frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
         frame.setLocationRelativeTo(null); // Centers screen
         frame.setResizable(false);
-        openGameView();
+        openMainMenu();
     }
 
     public void openMainMenu() {

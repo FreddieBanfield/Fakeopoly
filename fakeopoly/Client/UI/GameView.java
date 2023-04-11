@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -20,6 +21,7 @@ import javax.swing.JPanel;
 
 import Client.GameClient;
 import Client.ActionListener.PropertyActionListener;
+import Shared.Objects.Property;
 
 public class GameView {
     private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
@@ -189,17 +191,25 @@ public class GameView {
         }
     }
 
+    // Gets property info from server to display in modal
     public void createPropertyModalInfo(int id) {
-        String title = "Property Title";
-        String contents = "Info on the property";
-        Icon icon = null;
-        Object[] btnOptions = { "Buy House",
-                "Sell House",
-                "Mortgage" };
+        try {
+            Property property = client.getPlayerService().getPropertyById(id);
 
-        showPropertyModal(title, contents, icon, btnOptions);
+            String title = property.getName();
+            String contents = property.getColor();
+            Icon icon = null;
+            Object[] btnOptions = { "Buy House",
+                    "Sell House",
+                    "Mortgage" };
+
+            showPropertyModal(title, contents, icon, btnOptions);
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
     }
 
+    // Creates actual modal object
     private void showPropertyModal(String title, String contents, Icon icon, Object[] btnOptions) {
         JOptionPane.showOptionDialog(boardPanel,
                 contents,

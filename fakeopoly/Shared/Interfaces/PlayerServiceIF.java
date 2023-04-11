@@ -5,6 +5,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import Shared.Objects.Message;
+import Shared.Objects.Property;
 
 public interface PlayerServiceIF extends Remote {
 
@@ -30,4 +31,6 @@ public interface PlayerServiceIF extends Remote {
     public void setIsReadyById(Boolean isReady, int id) throws RemoteException;
 
     public Boolean getIsReadyById(int id) throws RemoteException;
+
+    public Property getPropertyById(int id) throws RemoteException;
 }
