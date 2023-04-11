@@ -181,13 +181,20 @@ public class GameClient {
     public GameLobby getGameLobby() {
         return gameLobby;
     }
+    public GameView getGameView() {
+        return gameView;
+    }
 
     /**
      * Runs the client as an application with a closeable frame.
      */
     public static void main(String[] args) throws Exception {
         GameClient client = new GameClient();
-        client.mainMenu.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.mainMenu.getFrame().setVisible(true);
+        try{
+            client.mainMenu.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            client.mainMenu.getFrame().setVisible(true);
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
 }

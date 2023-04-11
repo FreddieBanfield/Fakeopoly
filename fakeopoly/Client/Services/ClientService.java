@@ -15,17 +15,29 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
         super();
         this.gameClient = gameClient;
     }
-
+    @Override
     public void updatePlayerList(String[] playerNames) throws RemoteException {
         gameClient.getGameLobby().setPlayerList(playerNames);
     }
-
+    @Override
     public void updateMessageBoard(ArrayList<Message> messages) throws RemoteException {
         gameClient.getGameLobby().setMessageBoard(messages);
     }
-
+    @Override
+    public void updateGameMessageBoard(ArrayList<Message> messages) throws RemoteException {
+        gameClient.getGameView().setMessageBoard(messages);
+    }
+    @Override
     public void startGame() throws RemoteException {
         gameClient.getGameLobby().startGame();
+    }
+    @Override
+    public void nextTurn(int turn){
+        if(turn == gameClient.getClientId()){
+            gameClient.getGameView().enableTurn();
+        }else{
+            gameClient.getGameView().disableturn();
+        }
     }
 
 }
