@@ -76,13 +76,14 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
             turn = 0;
         } else {
             turn++;
-            try {
-                for (int i = 0; i < totalPlayers; i++) {
-                    players.get(i).getClient().nextTurn(turn);
-                }
-            } catch (Exception e) {
-                System.out.println(e);
+        }
+
+        try {
+            for (int i = 0; i < totalPlayers; i++) {
+                players.get(i).getClient().nextTurn(turn);
             }
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 
