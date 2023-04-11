@@ -1,4 +1,4 @@
-package Client.ActionListener;
+package Client.Other;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

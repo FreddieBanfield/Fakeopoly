@@ -3,34 +3,39 @@ package Client.UI;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import Client.GameClient;
-import Client.ActionListener.PropertyActionListener;
+import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
 
 public class GameView {
     private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
+    private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
 
     private JFrame frame;
     private int frameWidth;
     private int frameHeight;
     private GameClient client;
     private BufferedImage boardImages[];
+    private BufferedImage modalImages[];
     private ImageIcon boardImagesScaled[];
     private JButton boardTiles[];
 
@@ -47,6 +52,7 @@ public class GameView {
         frameWidth = width + 570;
         frameHeight = height + 170;
         this.client = client;
+        modalImages = new BufferedImage[imagesNum];
         boardImages = new BufferedImage[imagesNum];
         boardImagesScaled = new ImageIcon[imagesNum];
         boardTiles = new JButton[imagesNum];
@@ -130,6 +136,47 @@ public class GameView {
             boardImages[37] = ImageIO.read(new File(BOARDPATH + "monopoly_board_Buildings_DarkBlue.png"));
             boardImages[38] = ImageIO.read(new File(BOARDPATH + "monopoly_board_LuxuryTax.jpg"));
             boardImages[39] = ImageIO.read(new File(BOARDPATH + "monopoly_board_Buildings_DarkBlue.png"));
+
+            modalImages[0] = ImageIO.read(new File(MODALPATH + "monopoly_board_Go.jpg"));
+            modalImages[1] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_brown.png"));
+            modalImages[2] = ImageIO.read(new File(MODALPATH + "monopoly_board_Chest.jpg"));
+            modalImages[3] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_brown.png"));
+            modalImages[4] = ImageIO.read(new File(MODALPATH + "monopoly_board_IncomeTax.jpg"));
+            modalImages[5] = ImageIO.read(new File(MODALPATH + "monopoly_board_Train.jpg"));
+            modalImages[6] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_LightBlue.png"));
+            modalImages[7] = ImageIO.read(new File(MODALPATH + "monopoly_board_Chance.jpg"));
+            modalImages[8] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_LightBlue.png"));
+            modalImages[9] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_LightBlue.png"));
+            modalImages[10] = ImageIO.read(new File(MODALPATH + "monopoly_board_Jail(Whole).jpg"));
+            modalImages[11] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Pink.png"));
+            modalImages[12] = ImageIO.read(new File(MODALPATH + "monopoly_board_ElectricityCompany.jpg"));
+            modalImages[13] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Pink.png"));
+            modalImages[14] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Pink.png"));
+            modalImages[15] = ImageIO.read(new File(MODALPATH + "monopoly_board_Train.jpg"));
+            modalImages[16] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Orange.png"));
+            modalImages[17] = ImageIO.read(new File(MODALPATH + "monopoly_board_Chest.jpg"));
+            modalImages[18] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Orange.png"));
+            modalImages[19] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Orange.png"));
+            modalImages[20] = ImageIO.read(new File(MODALPATH + "monopoly_board_FreeParking.jpg"));
+            modalImages[21] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Red.png"));
+            modalImages[22] = ImageIO.read(new File(MODALPATH + "monopoly_board_Chance.jpg"));
+            modalImages[23] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Red.png"));
+            modalImages[24] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Red.png"));
+            modalImages[25] = ImageIO.read(new File(MODALPATH + "monopoly_board_Train.jpg"));
+            modalImages[26] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Yellow.png"));
+            modalImages[27] = ImageIO.read(new File(MODALPATH + "monopoly_board_WaterWorks.jpg"));
+            modalImages[28] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Yellow.png"));
+            modalImages[29] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Yellow.png"));
+            modalImages[30] = ImageIO.read(new File(MODALPATH + "monopoly_board_GotoJail.jpg"));
+            modalImages[31] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Green.png"));
+            modalImages[32] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Green.png"));
+            modalImages[33] = ImageIO.read(new File(MODALPATH + "monopoly_board_Chest.jpg"));
+            modalImages[34] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Green.png"));
+            modalImages[35] = ImageIO.read(new File(MODALPATH + "monopoly_board_Train.jpg"));
+            modalImages[36] = ImageIO.read(new File(MODALPATH + "monopoly_board_Chance.jpg"));
+            modalImages[37] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_DarkBlue.png"));
+            modalImages[38] = ImageIO.read(new File(MODALPATH + "monopoly_board_LuxuryTax.jpg"));
+            modalImages[39] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_DarkBlue.png"));
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -194,31 +241,69 @@ public class GameView {
     // Gets property info from server to display in modal
     public void createPropertyModalInfo(int id) {
         try {
+            int WIDTH = 220;
+            int HEIGHT = 300;
+
             Property property = client.getPlayerService().getPropertyById(id);
+            ImageIcon background = new ImageIcon(
+                    modalImages[id].getScaledInstance((int) WIDTH,
+                            (int) HEIGHT, Image.SCALE_SMOOTH));
 
             String title = property.getName();
             String contents = property.getColor();
-            Icon icon = null;
             Object[] btnOptions = { "Buy House",
                     "Sell House",
                     "Mortgage" };
 
-            showPropertyModal(title, contents, icon, btnOptions);
+            showPropertyModal(WIDTH, HEIGHT, title, contents, background, btnOptions);
         } catch (RemoteException e) {
             System.out.println(e);
         }
     }
 
     // Creates actual modal object
-    private void showPropertyModal(String title, String contents, Icon icon, Object[] btnOptions) {
-        JOptionPane.showOptionDialog(boardPanel,
-                contents,
-                title,
-                JOptionPane.YES_NO_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                icon,
-                btnOptions,
-                btnOptions[2]);
+    private void showPropertyModal(int WIDTH, int HEIGHT, String title, String contents, ImageIcon background,
+            Object[] btnOptions) {
+
+        // create a dialog Box
+        JDialog propertyDialog = new JDialog(frame, title);
+        propertyDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        propertyDialog.setUndecorated(true);
+        propertyDialog.setSize(WIDTH, HEIGHT);
+        propertyDialog.addWindowFocusListener(new WindowFocusListener() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                // do nothing
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
+                    return;
+                }
+                propertyDialog.dispose();
+            }
+        });
+
+        // Panel
+        JLabel backgroundLbl = new JLabel(background);
+        backgroundLbl.setBounds(0, 0, WIDTH, HEIGHT);
+
+        // Header
+        JLabel titleLbl = new JLabel(title, SwingConstants.CENTER);
+        titleLbl.setBounds(0, 20, WIDTH, 30);
+
+        // Components
+        JLabel contentsLbl = new JLabel(contents);
+
+        // Adds components
+        backgroundLbl.add(titleLbl);
+        backgroundLbl.add(contentsLbl);
+        propertyDialog.add(backgroundLbl);
+
+        // set visibility of dialog
+        propertyDialog.setLocationRelativeTo(boardPanel); // Centers screen
+        propertyDialog.setVisible(true);
     }
 
     // Gets Frame
