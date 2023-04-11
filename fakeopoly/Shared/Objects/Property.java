@@ -12,7 +12,7 @@ public class Property implements Serializable {
     // Generic information
     private String name;
     private Color color;
-    private double price; // Value of the property when a player initially buys it
+    private int price; // Value of the property when a player initially buys it
     private int tier; // What level of houses are on the property
     private Player owner;
     private boolean isMortgaged;
@@ -37,7 +37,7 @@ public class Property implements Serializable {
     // constructor
     // we can instantiate the properties programmatically from pulling the data from
     // a database (allows us to save games in future)
-    public Property(String name, Color color, double price, int tier, Player owner, boolean isMortgaged,
+    public Property(String name, Color color, int price, int tier, Player owner, boolean isMortgaged,
             double tierOneValue, double tierTwoValue, double tierThreeValue, double tierFourValue) {
         this.name = name;
         this.color = color;
@@ -63,7 +63,7 @@ public class Property implements Serializable {
         return color;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 

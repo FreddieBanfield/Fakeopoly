@@ -12,11 +12,14 @@ import Shared.Objects.Player;
 public class PlayerService extends UnicastRemoteObject implements PlayerServiceIF {
     private ArrayList<Player> players;
     private ArrayList<Message> messages;
+    private int turn;
+    private int totalPlayers;
 
     public PlayerService(ArrayList<Player> players, ArrayList<Message> messages) throws RemoteException {
         super();
         this.players = players;
         this.messages = messages;
+        turn = 0;
     }
 
     @Override
@@ -33,13 +36,49 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
      * @throws RemoteException
      */
     @Override
+    public void addGameMessage(Message message){
+        messages.add(message);
+        UpdateGameMessageBoard();
+    }
+
+    public void UpdateGameMessageBoard() {
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i) != null)
+                try {
+                    players.get(i).getClient().updateGameMessageBoard(messages);
+                } catch (RemoteException e) {
+                    System.out.println(e);
+                }
+        }
+    }
+    @Override
     public int createPlayer(String name, Color color) throws RemoteException {
         Player player = new Player(name, color);
         players.add(player);
         int id = players.indexOf(player);
         return id;
     }
+    @Override
+    public int getTurn(){
+        return turn;
+    }
 
+    @Override 
+    public void endTurn(){
+        //update other pieces
+        if(turn == totalPlayers-1){
+            turn = 0;
+        }else{
+            turn++;
+        try{
+            for (int i = 0; i < totalPlayers; i++) {
+                players.get(i).getClient().nextTurn(turn);                    
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+
+    }
     /**
      * Connects the clients Interface to the server via username + id
      * Example: Virality1
@@ -74,7 +113,10 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     public String getNameById(int id) throws RemoteException {
         return players.get(id).getName();
     }
-
+    @Override
+    public int getMoneyById(int id) throws RemoteException {
+        return players.get(id).getMoney();
+    }
     @Override
     public Color getColorById(int id) throws RemoteException {
         return players.get(id).getColor();
@@ -111,7 +153,8 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     }
 
     private void checkIfAllPlayersAreReady() throws RemoteException {
-        int readyPlayers = 0, totalPlayers = 0;
+        int readyPlayers = 0;
+        totalPlayers = 0;
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i) != null) {
                 totalPlayers++;
@@ -127,5 +170,9 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                     players.get(i).getClient().startGame();
             }
         }
+    }
+    @Override
+    public int getTotalPlayers(){
+        return totalPlayers;
     }
 }

@@ -12,6 +12,7 @@ public interface ClientServiceIF extends Remote {
     public void updatePlayerList(String[] playerNames) throws RemoteException;
 
     public void updateMessageBoard(ArrayList<Message> messages) throws RemoteException;
-
+    public void updateGameMessageBoard(ArrayList<Message> messages) throws RemoteException;
     public void startGame() throws RemoteException;
+    public void nextTurn(int turn) throws RemoteException;
 }

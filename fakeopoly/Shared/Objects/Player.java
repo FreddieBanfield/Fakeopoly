@@ -17,7 +17,7 @@ public class Player implements Serializable {
 
     private String name;
     private Color color;
-    private double money;
+    private int money;
     private Property[] properties;
     private ClientServiceIF _clientService;
     private boolean isReady;
@@ -56,11 +56,11 @@ public class Player implements Serializable {
         return color;
     }
 
-    public double getMoney() {
+    public int getMoney() {
         return money;
     }
 
-    public void setMoney(double money) {
+    public void setMoney(int money) {
         this.money = money;
     }
 
