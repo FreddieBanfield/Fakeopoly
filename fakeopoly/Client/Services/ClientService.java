@@ -50,4 +50,9 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
         gameClient.getGameView().displayDiceRoll(dice1, dice2);
     }
 
+    @Override
+    public void updatePlayerLocation(int newLocation, int id) throws RemoteException {
+        gameClient.getGameView().movePlayerAnimation(newLocation, id);
+    }
+
 }

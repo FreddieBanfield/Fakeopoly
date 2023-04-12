@@ -1,6 +1,7 @@
 package Client.UI;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -58,7 +59,7 @@ public class GameView {
     private BufferedImage diceImages[];
     private BufferedImage modalImages[];
     private ImageIcon boardImagesScaled[];
-    private JButton boardTiles[];
+    private JLabel boardTiles[];
     private JButton rollDice;
     private JButton endTurn;
     private JTextArea chatArea;
@@ -73,6 +74,8 @@ public class GameView {
     private JPanel mainPanel;
     private int diceSize = 40;
 
+    private JLabel[] playerIcons;
+
     private int imagesNum = 40;
     private double imageScale = 1.25;
 
@@ -85,7 +88,7 @@ public class GameView {
         modalImages = new BufferedImage[imagesNum];
         boardImages = new BufferedImage[imagesNum];
         boardImagesScaled = new ImageIcon[imagesNum];
-        boardTiles = new JButton[imagesNum];
+        boardTiles = new JLabel[imagesNum];
         diceImages = new BufferedImage[6];
         diceTile = new JLabel[2];
         playerDetails = new JLabel[2];
@@ -94,8 +97,16 @@ public class GameView {
         chatArea = new JTextArea();
         sendMessageBtn = new JButton("Send");
         messageBoard = new JScrollPane(chatArea);
+
         diceTile[0].setBounds(500, 540, diceSize, diceSize);
         diceTile[1].setBounds(545, 540, diceSize, diceSize);
+        // Create JLabel list for player Icons to move around the board
+        try {
+            playerIcons = new JLabel[client.getPlayerService().getTotalPlayers()];
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
+
         // Frame
         frame.setTitle("Fakeopoly - Game View");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -121,11 +132,15 @@ public class GameView {
         setControlPanelButtons();
         setControlPanelChat();
         setControlPanelPlayerDetails();
+        for (int i = 0; i < playerIcons.length; i++) {
+            createPlayerIcon(i, 0);
+        }
 
         // Add JButtons to panel
         for (int i = 0; i < imagesNum; i++) {
             boardPanel.add(boardTiles[i]);
         }
+
         boardPanel.add(diceTile[0]);
         boardPanel.add(diceTile[1]);
         // add compontents to control panel
@@ -146,6 +161,66 @@ public class GameView {
         // Add Panel to Frame
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
+    }
+
+    private void createPlayerIcon(int id, int propertyId) {
+        try {
+            Color colour = client.getPlayerService().getColorById(id);
+            playerIcons[id] = new JLabel("" + client.getPlayerService().getNameById(id).charAt(0),
+                    SwingConstants.CENTER);
+            playerIcons[id].setBackground(colour);
+            playerIcons[id].setOpaque(true);
+
+            if (id == 0) {
+                playerIcons[id].setBounds(0, 0, 20,
+                        20);
+            } else if (id == 1) {
+                playerIcons[id].setBounds(boardTiles[propertyId].getWidth() - 20,
+                        0, 20,
+                        20);
+            } else if (id == 2) {
+                playerIcons[id].setBounds(0,
+                        boardTiles[propertyId].getHeight() - 20, 20,
+                        20);
+            } else {
+                playerIcons[id].setBounds(boardTiles[propertyId].getWidth() - 20,
+                        boardTiles[propertyId].getHeight() - 20, 20,
+                        20);
+            }
+
+            playerIcons[id].setFont(new Font("Serif", Font.BOLD, 12));
+            playerIcons[id].setForeground(Color.black);
+            playerIcons[id].setBorder(BorderFactory.createLineBorder(Color.black, 2));
+            boardTiles[propertyId].add(playerIcons[id]);
+            boardPanel.repaint();
+            boardPanel.revalidate();
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
+    }
+
+    // Sets new location
+    private void setPlayerIconLocation(int id, int propertyId) {
+        try {
+
+            if (id == 0) {
+                playerIcons[id].setLocation(0, 0);
+            } else if (id == 1) {
+                playerIcons[id].setLocation(boardTiles[propertyId].getWidth() - 20,
+                        0);
+            } else if (id == 2) {
+                playerIcons[id].setLocation(0,
+                        boardTiles[propertyId].getHeight() - 20);
+            } else {
+                playerIcons[id].setLocation(boardTiles[propertyId].getWidth() - 20,
+                        boardTiles[propertyId].getHeight() - 20);
+            }
+            boardTiles[propertyId].add(playerIcons[id]);
+            boardPanel.repaint();
+            boardPanel.revalidate();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     private void setControlPanelChat() {
@@ -306,6 +381,7 @@ public class GameView {
         }
     }
 
+
     // Gets random number for both dice and updates clients
     private void performDiceRoll() {
         //for loop for animation
@@ -317,7 +393,6 @@ public class GameView {
 
         rollDice.setEnabled(false);
     }
-
     // Gets images of dice from files
     private void getDiceImages() {
         try {
@@ -346,6 +421,11 @@ public class GameView {
         diceTile[1].revalidate();
         boardPanel.repaint();
         boardPanel.revalidate();
+    }
+
+    // Animation to move a player icon
+    public void movePlayerAnimation(int newLocation, int id) {
+        setPlayerIconLocation(id, newLocation);
     }
 
     private void endTurn() {
@@ -463,8 +543,9 @@ public class GameView {
 
         // Set image to JButton and create buttons
         for (int i = 0; i < imagesNum; i++) {
-            boardTiles[i] = new JButton(boardImagesScaled[i]);
-            boardTiles[i].addActionListener(new PropertyActionListener(i, this));
+            boardTiles[i] = new JLabel(boardImagesScaled[i]);
+            boardTiles[i].addMouseListener(new PropertyActionListener(i, this));
+            boardTiles[i].setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
 
         // Set location and size of JButton
