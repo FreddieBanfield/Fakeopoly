@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -290,12 +291,27 @@ public class GameView {
         }
 
         int sum = dice1 + dice2;
-
+        try {
+            client.getPlayerService().displayDiceRoll(dice1, dice2, client.getClientId());
+        } catch (RemoteException e) {
+            System.out.print(e);
+        }
+        displayDiceRoll(dice1, dice2);
+    }
+    public void displayDiceRoll(int dice1, int dice2){
+        try{
+            diceImages[0] = ImageIO.read(new File(DICEPATH + "dice1.png"));
+            diceImages[1] = ImageIO.read(new File(DICEPATH + "dice2.png"));
+            diceImages[2] = ImageIO.read(new File(DICEPATH + "dice3.png"));
+            diceImages[3] = ImageIO.read(new File(DICEPATH + "dice4.png"));
+            diceImages[4] = ImageIO.read(new File(DICEPATH + "dice5.png"));
+            diceImages[5] = ImageIO.read(new File(DICEPATH + "dice6.png"));
+        }catch(Exception e){
+            System.out.print(e);
+        }
         diceTile[0].setIcon(new ImageIcon(diceImages[dice1-1].getScaledInstance((int) (diceImages[dice1-1].getWidth() / imageScale), (int) (diceImages[dice1-1].getHeight() / imageScale), Image.SCALE_SMOOTH)));
         diceTile[1].setIcon(new ImageIcon(diceImages[dice2-1].getScaledInstance((int) (diceImages[dice2-1].getWidth() / imageScale), (int) (diceImages[dice2-1].getHeight() / imageScale), Image.SCALE_SMOOTH)));
-
     }
-
     private void endTurn(){
         diceTile[0].setIcon(new ImageIcon());
         diceTile[1].setIcon(new ImageIcon());

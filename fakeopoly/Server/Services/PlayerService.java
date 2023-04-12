@@ -96,6 +96,17 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     }
 
     @Override
+    public void displayDiceRoll(int dice1, int dice2, int id){
+        try{
+            for(int i = 0; i < totalPlayers; i++){
+                if(i != id)
+                    players.get(i).getClient().displayDiceRoll(dice1,dice2);
+            }
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
+    }
+    @Override
     public void updatePlayerList() throws RemoteException {
         // Get list of player names
         String[] playerNames = new String[players.size()];
