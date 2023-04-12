@@ -63,6 +63,7 @@ public class FindServer {
 
         serverAddressTF = new JTextField();
         serverAddressTF.setBounds(frameWidth / 2 - 155, yOffset + 130, 300, 30);
+        serverAddressTF.setText("localhost");
 
         serverAddressErrorLbl = new JLabel();
         serverAddressErrorLbl.setBounds(frameWidth / 2 - 155, yOffset + 160, 300, 30);
@@ -77,6 +78,7 @@ public class FindServer {
 
         serverPortTF = new JTextField();
         serverPortTF.setBounds(frameWidth / 2 - 155, yOffset + 210, 300, 30);
+        serverPortTF.setText("9001");
 
         serverPortErrorLbl = new JLabel();
         serverPortErrorLbl.setBounds(frameWidth / 2 - 155, yOffset + 240, 300, 30);

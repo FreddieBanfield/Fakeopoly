@@ -11,10 +11,13 @@ import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.StackWalker.Option;
+//import java.lang.StackWalker.Option;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.rmi.RemoteException;
 
 import javax.imageio.ImageIO;
@@ -39,13 +42,13 @@ import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
 
 public class GameView {
-    private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
-    private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
-    private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
+    //private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
+    //private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
+    //private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
     // Brady's filepath for whatever reason
-    // private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
-    // private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
-    // private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
+    private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
+    private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
+    private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
 
     private JFrame frame;
     private int frameWidth;
@@ -68,6 +71,7 @@ public class GameView {
     private JPanel controlsPanel;
     private JPanel boardPanel;
     private JPanel mainPanel;
+    private int diceSize = 40;
 
     private int imagesNum = 40;
     private double imageScale = 1.25;
@@ -90,8 +94,8 @@ public class GameView {
         chatArea = new JTextArea();
         sendMessageBtn = new JButton("Send");
         messageBoard = new JScrollPane(chatArea);
-        diceTile[0].setBounds(225, 300, 125, 125);
-        diceTile[1].setBounds(375, 300, 125, 125);
+        diceTile[0].setBounds(500, 540, diceSize, diceSize);
+        diceTile[1].setBounds(545, 540, diceSize, diceSize);
         // Frame
         frame.setTitle("Fakeopoly - Game View");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -295,6 +299,8 @@ public class GameView {
     public void disableTurn() {
         rollDice.setEnabled(false);
         endTurn.setEnabled(false);
+        diceTile[0].setIcon(new ImageIcon());
+        diceTile[1].setIcon(new ImageIcon());
         for (int i = 0; i < playerDetails.length; i++) {
             playerDetails[i].setText(setPlayerDetailsString(i));
         }
@@ -302,15 +308,14 @@ public class GameView {
 
     // Gets random number for both dice and updates clients
     private void performDiceRoll() {
-        int dice1 = (int) (Math.random() * 6 + 1);
-        int dice2 = (int) (Math.random() * 6 + 1);
-
-        int sum = dice1 + dice2;
+        //for loop for animation
         try {
-            client.getPlayerService().displayDiceRoll(dice1, dice2);
-        } catch (RemoteException e) {
-            System.out.print(e);
+            client.getPlayerService().displayDiceRoll();
+        } catch (Exception e) {
+            System.out.print(e);    
         }
+
+        rollDice.setEnabled(false);
     }
 
     // Gets images of dice from files
@@ -330,11 +335,17 @@ public class GameView {
     // Displays image of dice
     public void displayDiceRoll(int dice1, int dice2) {
         diceTile[0].setIcon(new ImageIcon(
-                diceImages[dice1 - 1].getScaledInstance((int) (diceImages[dice1 - 1].getWidth() / imageScale),
-                        (int) (diceImages[dice1 - 1].getHeight() / imageScale), Image.SCALE_SMOOTH)));
+                diceImages[dice1 - 1].getScaledInstance( diceSize ,
+                        diceSize, Image.SCALE_SMOOTH)));
         diceTile[1].setIcon(new ImageIcon(
-                diceImages[dice2 - 1].getScaledInstance((int) (diceImages[dice2 - 1].getWidth() / imageScale),
-                        (int) (diceImages[dice2 - 1].getHeight() / imageScale), Image.SCALE_SMOOTH)));
+                diceImages[dice2 - 1].getScaledInstance( diceSize ,
+                diceSize, Image.SCALE_SMOOTH)));
+        diceTile[0].repaint();
+        diceTile[0].revalidate();
+        diceTile[1].repaint();
+        diceTile[1].revalidate();
+        boardPanel.repaint();
+        boardPanel.revalidate();
     }
 
     private void endTurn() {
