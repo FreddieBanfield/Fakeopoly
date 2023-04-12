@@ -67,7 +67,7 @@ public class Player implements Serializable {
     }
 
     public int getLocation() {
-        return money;
+        return location;
     }
 
     public void setLocation(int location) {

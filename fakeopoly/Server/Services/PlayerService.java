@@ -202,4 +202,20 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     public int getTotalPlayers() {
         return totalPlayers;
     }
+
+    @Override
+    public void updatePlayerLocation(int diceSum, int id) throws RemoteException {
+        // Update Server Player object
+        int currentLocation = players.get(id).getLocation();
+        int newLocation = currentLocation + diceSum;
+        if (newLocation > 39)
+            newLocation -= 40;
+        players.get(id).setLocation(newLocation);
+
+        // Update Clients UI
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i) != null)
+                players.get(i).getClient().updatePlayerLocation(newLocation, id);
+        }
+    }
 }
