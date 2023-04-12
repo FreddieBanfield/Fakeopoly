@@ -2,5 +2,11 @@
   "cSpell.words": [
     "FRAMEHEIGHT",
     "FRAMEWIDTH"
+  ],
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "ExternalLibraries/jar_files/jackson-annotations-2.15.0-rc2.jar",
+    "ExternalLibraries/jar_files/jackson-core-2.15.0-rc2.jar",
+    "ExternalLibraries/jar_files/jackson-databind-2.15.0-rc2.jar"
   ]
 }

@@ -8,16 +8,20 @@ import java.util.ArrayList;
 import Shared.Interfaces.*;
 import Shared.Objects.Message;
 import Shared.Objects.Player;
+import Shared.Objects.Property;
 
 public class PlayerService extends UnicastRemoteObject implements PlayerServiceIF {
     private ArrayList<Player> players;
+    private ArrayList<Property> properties;
     private ArrayList<Message> messages;
     private int turn;
     private int totalPlayers;
 
-    public PlayerService(ArrayList<Player> players, ArrayList<Message> messages) throws RemoteException {
+    public PlayerService(ArrayList<Player> players, ArrayList<Property> properties, ArrayList<Message> messages)
+            throws RemoteException {
         super();
         this.players = players;
+        this.properties = properties;
         this.messages = messages;
         turn = 0;
     }
@@ -36,7 +40,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
      * @throws RemoteException
      */
     @Override
-    public void addGameMessage(Message message){
+    public void addGameMessage(Message message) {
         messages.add(message);
         UpdateGameMessageBoard();
     }
@@ -51,6 +55,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                 }
         }
     }
+
     @Override
     public int createPlayer(String name, Color color) throws RemoteException {
         Player player = new Player(name, color);
@@ -58,28 +63,30 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         int id = players.indexOf(player);
         return id;
     }
+
     @Override
-    public int getTurn(){
+    public int getTurn() {
         return turn;
     }
 
-    @Override 
-    public void endTurn(){
-        //update other pieces
-        if(turn == totalPlayers-1){
+    @Override
+    public void endTurn() {
+        // update other pieces
+        if (turn == totalPlayers - 1) {
             turn = 0;
-        }else{
+        } else {
             turn++;
         }
-        try{
+        
+        try {
             for (int i = 0; i < totalPlayers; i++) {
-                players.get(i).getClient().nextTurn(turn);                    
+                players.get(i).getClient().nextTurn(turn);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
-
     }
+
     /**
      * Connects the clients Interface to the server via username + id
      * Example: Virality1
@@ -125,10 +132,12 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     public String getNameById(int id) throws RemoteException {
         return players.get(id).getName();
     }
+
     @Override
     public int getMoneyById(int id) throws RemoteException {
         return players.get(id).getMoney();
     }
+
     @Override
     public Color getColorById(int id) throws RemoteException {
         return players.get(id).getColor();
@@ -183,8 +192,14 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
             }
         }
     }
+
     @Override
-    public int getTotalPlayers(){
+    public Property getPropertyById(int id) throws RemoteException {
+        return properties.get(id);
+    }
+
+    @Override
+    public int getTotalPlayers() {
         return totalPlayers;
     }
 }
