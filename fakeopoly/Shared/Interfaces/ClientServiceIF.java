@@ -15,4 +15,5 @@ public interface ClientServiceIF extends Remote {
     public void updateGameMessageBoard(ArrayList<Message> messages) throws RemoteException;
     public void startGame() throws RemoteException;
     public void nextTurn(int turn) throws RemoteException;
+    public void displayDiceRoll(int dice1, int dice2) throws RemoteException;
 }

@@ -39,5 +39,9 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
             gameClient.getGameView().disableturn();
         }
     }
+    @Override
+    public void displayDiceRoll(int dice1, int dice2) throws RemoteException {
+        gameClient.getGameView().displayDiceRoll(dice1,dice2);
+    }
 
 }
