@@ -21,12 +21,14 @@ public class Player implements Serializable {
     private Property[] properties;
     private ClientServiceIF _clientService;
     private boolean isReady;
+    private int location;
 
     // constructor
     public Player(String name, Color color) {
         this.name = name;
         this.color = color;
         this.isReady = false;
+        this.location = 0;
     }
 
     public boolean connectClient(String clientAddress, int clientPort, int id) {
@@ -62,6 +64,14 @@ public class Player implements Serializable {
 
     public void setMoney(int money) {
         this.money = money;
+    }
+
+    public int getLocation() {
+        return location;
+    }
+
+    public void setLocation(int location) {
+        this.location = location;
     }
 
     public Boolean getIsReady() {
