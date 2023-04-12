@@ -5,11 +5,14 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import Shared.Objects.Message;
+import Shared.Objects.Player;
 import Shared.Objects.Property;
 
 public interface PlayerServiceIF extends Remote {
 
     // Declaring the method prototype
+    public Player getPlayerById(int id) throws RemoteException;
+
     public int getNumberOfPlayers() throws RemoteException;
 
     public void updatePlayerList() throws RemoteException;

@@ -12,13 +12,9 @@ import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-//import java.lang.StackWalker.Option;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 import java.rmi.RemoteException;
 
 import javax.imageio.ImageIO;
@@ -43,13 +39,13 @@ import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
 
 public class GameView {
-    //private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
-    //private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
-    //private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
+    private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
+    private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
+    private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
     // Brady's filepath for whatever reason
-    private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
-    private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
-    private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
+    // private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
+    // private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
+    // private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
 
     private JFrame frame;
     private int frameWidth;
@@ -218,8 +214,20 @@ public class GameView {
             boardTiles[propertyId].add(playerIcons[id]);
             boardPanel.repaint();
             boardPanel.revalidate();
+
+            landedOnPropertyHandler(propertyId);
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+
+    private void landedOnPropertyHandler(int propertyId) {
+        // Check if player can purchase a purchasable property and it is your turn
+        Property currentProperty = client.getPlayerService().getPropertyById(propertyId);
+        if (currentProperty.getOwner() == null && currentProperty.getPrice() != 0 && id == client.getClientId()) {
+            purchaseProperty(currentProperty, propertyId);
+        } else {
+            // charge player
         }
     }
 
@@ -381,18 +389,38 @@ public class GameView {
         }
     }
 
-
     // Gets random number for both dice and updates clients
     private void performDiceRoll() {
-        //for loop for animation
+        // for loop for animation
         try {
             client.getPlayerService().displayDiceRoll(client.getClientId());
         } catch (Exception e) {
-            System.out.print(e);    
+            System.out.print(e);
         }
 
         rollDice.setEnabled(false);
     }
+
+    // Allows user to purchase property via modal
+    public void purchaseProperty(Property currentProperty, int propertyId) {
+        try {
+            int WIDTH = 220;
+            int HEIGHT = 320;
+
+            ImageIcon background = new ImageIcon(
+                    modalImages[propertyId].getScaledInstance((int) WIDTH,
+                            (int) HEIGHT, Image.SCALE_SMOOTH));
+
+            Object[] btnOptions = { "Purchase", "Cancel" };
+
+            showPropertyModal(WIDTH, HEIGHT, currentProperty, background, btnOptions);
+            currentProperty.setOwner(client.getPlayerService().getPlayerById(client.getClientId()));
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
+        System.out.println(currentProperty.getOwner());
+    }
+
     // Gets images of dice from files
     private void getDiceImages() {
         try {
@@ -410,11 +438,11 @@ public class GameView {
     // Displays image of dice
     public void displayDiceRoll(int dice1, int dice2) {
         diceTile[0].setIcon(new ImageIcon(
-                diceImages[dice1 - 1].getScaledInstance( diceSize ,
+                diceImages[dice1 - 1].getScaledInstance(diceSize,
                         diceSize, Image.SCALE_SMOOTH)));
         diceTile[1].setIcon(new ImageIcon(
-                diceImages[dice2 - 1].getScaledInstance( diceSize ,
-                diceSize, Image.SCALE_SMOOTH)));
+                diceImages[dice2 - 1].getScaledInstance(diceSize,
+                        diceSize, Image.SCALE_SMOOTH)));
         diceTile[0].repaint();
         diceTile[0].revalidate();
         diceTile[1].repaint();
@@ -441,10 +469,12 @@ public class GameView {
         }
 
     }
-    public void wipe(){
+
+    public void wipe() {
         diceTile[0].setIcon(new ImageIcon());
         diceTile[1].setIcon(new ImageIcon());
     }
+
     private void loadPropertyImages() {
         // Get images from folder and store as buffered image
         try {

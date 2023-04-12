@@ -37,7 +37,7 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
     }
 
     @Override
-    public void nextTurn(int turn) {
+    public void nextTurn(int turn) throws RemoteException {
         if (turn == gameClient.getClientId()) {
             gameClient.getGameView().enableTurn();
         } else {
@@ -54,8 +54,9 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
     public void updatePlayerLocation(int newLocation, int id) throws RemoteException {
         gameClient.getGameView().movePlayerAnimation(newLocation, id);
     }
+
     @Override
-    public void wipe(){
+    public void wipe() throws RemoteException {
         gameClient.getGameView().wipe();
     }
 }

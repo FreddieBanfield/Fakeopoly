@@ -29,6 +29,7 @@ public class Player implements Serializable {
         this.color = color;
         this.isReady = false;
         this.location = 0;
+        this.money = 1500;
     }
 
     public boolean connectClient(String clientAddress, int clientPort, int id) {

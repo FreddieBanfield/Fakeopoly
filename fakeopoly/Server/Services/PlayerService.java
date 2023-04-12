@@ -29,6 +29,11 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     }
 
     @Override
+    public Player getPlayerById(int id) throws RemoteException {
+        return players.get(id);
+    }
+
+    @Override
     public int getNumberOfPlayers() throws RemoteException {
         return players.size();
     }
@@ -88,7 +93,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         } catch (Exception e) {
             System.out.println(e);
         }
-        
+
     }
 
     /**
@@ -111,9 +116,10 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         Thread thread = new Thread(new Runnable() {
             int delay = 50;
             int sum = 0;
+
             @Override
-            public void run(){
-                for(int i = 0; i < 10; i++){
+            public void run() {
+                for (int i = 0; i < 10; i++) {
                     try {
                         Thread.sleep(delay);
                     } catch (Exception e) {
@@ -121,11 +127,11 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                     }
                     int dice1 = (int) (Math.random() * 6 + 1);
                     int dice2 = (int) (Math.random() * 6 + 1);
-                    for(int x = 0; x < totalPlayers; x++){
+                    for (int x = 0; x < totalPlayers; x++) {
                         try {
                             players.get(x).getClient().displayDiceRoll(dice1, dice2);
                         } catch (Exception e) {
-                            System.out.print(e);    
+                            System.out.print(e);
                         }
                     }
                     delay *= 1.3;
@@ -227,13 +233,14 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         return totalPlayers;
     }
 
-    private void wipe(int id){
-        try{
+    private void wipe(int id) {
+        try {
             players.get(id).getClient().wipe();
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
+
     private void updatePlayerLocation(int diceSum, int id) {
         // Update Server Player object
         int currentLocation = players.get(id).getLocation();
