@@ -44,7 +44,5 @@ public interface PlayerServiceIF extends Remote {
 
     public void addGameMessage(Message message) throws RemoteException;
 
-    public void displayDiceRoll(int dice1, int dice2) throws RemoteException;
-
-    public void updatePlayerLocation(int diceSum, int id) throws RemoteException;
+    public void displayDiceRoll(int id) throws RemoteException;
 }

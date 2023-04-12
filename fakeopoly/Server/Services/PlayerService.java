@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import Shared.Interfaces.*;
 import Shared.Objects.Message;
@@ -81,10 +83,12 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         try {
             for (int i = 0; i < totalPlayers; i++) {
                 players.get(i).getClient().nextTurn(turn);
+                wipe(i);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
+        
     }
 
     /**
@@ -103,14 +107,34 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     }
 
     @Override
-    public void displayDiceRoll(int dice1, int dice2) {
-        try {
-            for (int i = 0; i < totalPlayers; i++) {
-                players.get(i).getClient().displayDiceRoll(dice1, dice2);
+    public void displayDiceRoll(int id) {
+        Thread thread = new Thread(new Runnable() {
+            int delay = 50;
+            int sum = 0;
+            @Override
+            public void run(){
+                for(int i = 0; i < 10; i++){
+                    try {
+                        Thread.sleep(delay);
+                    } catch (Exception e) {
+                        System.out.print(e);
+                    }
+                    int dice1 = (int) (Math.random() * 6 + 1);
+                    int dice2 = (int) (Math.random() * 6 + 1);
+                    for(int x = 0; x < totalPlayers; x++){
+                        try {
+                            players.get(x).getClient().displayDiceRoll(dice1, dice2);
+                        } catch (Exception e) {
+                            System.out.print(e);    
+                        }
+                    }
+                    delay *= 1.3;
+                    sum = dice1 + dice2;
+                }
+                updatePlayerLocation(sum, id);
             }
-        } catch (RemoteException e) {
-            System.out.println(e);
-        }
+        });
+        thread.start();
     }
 
     @Override
@@ -203,8 +227,14 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         return totalPlayers;
     }
 
-    @Override
-    public void updatePlayerLocation(int diceSum, int id) throws RemoteException {
+    private void wipe(int id){
+        try{
+            players.get(id).getClient().wipe();
+        }catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    private void updatePlayerLocation(int diceSum, int id) {
         // Update Server Player object
         int currentLocation = players.get(id).getLocation();
         int newLocation = currentLocation + diceSum;
@@ -215,7 +245,11 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         // Update Clients UI
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i) != null)
-                players.get(i).getClient().updatePlayerLocation(newLocation, id);
+                try {
+                    players.get(i).getClient().updatePlayerLocation(newLocation, id);
+                } catch (RemoteException e) {
+                    System.out.println(e);
+                }
         }
     }
 }
