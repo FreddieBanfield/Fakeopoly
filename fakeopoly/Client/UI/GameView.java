@@ -292,7 +292,7 @@ public class GameView {
         }
     }
 
-    public void disableturn() {
+    public void disableTurn() {
         rollDice.setEnabled(false);
         endTurn.setEnabled(false);
         for (int i = 0; i < playerDetails.length; i++) {
