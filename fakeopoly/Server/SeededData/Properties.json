@@ -195,8 +195,8 @@
         "tierFiveValue" : 0
     },
     {
-        "name" : "Pall Mall",
-        "color" : "Whitehall",
+        "name" : "Whitehall",
+        "color" : "Yellow",
         "price" : 140,
         "tier" : 0,
         "pricePerHouse" : 100,

@@ -1,6 +1,5 @@
 package Shared.Objects;
 
-import java.awt.Color;
 import java.io.Serializable;
 
 /*
@@ -124,7 +123,7 @@ public class Property implements Serializable {
         this.isMortgaged = isMortgaged;
     }
 
-    public double getTierZeroValue() {
+    public int getTierZeroValue() {
         return tierZeroValue;
     }
 
@@ -132,7 +131,7 @@ public class Property implements Serializable {
         this.tierZeroValue = value;
     }
 
-    public double getTierOneValue() {
+    public int getTierOneValue() {
         return tierOneValue;
     }
 
@@ -140,7 +139,7 @@ public class Property implements Serializable {
         this.tierOneValue = value;
     }
 
-    public double getTierTwoValue() {
+    public int getTierTwoValue() {
         return tierTwoValue;
     }
 
@@ -148,7 +147,7 @@ public class Property implements Serializable {
         this.tierTwoValue = value;
     }
 
-    public double getTierThreeValue() {
+    public int getTierThreeValue() {
         return tierThreeValue;
     }
 
@@ -164,7 +163,7 @@ public class Property implements Serializable {
         this.tierFourValue = value;
     }
 
-    public double getTierFiveValue() {
+    public int getTierFiveValue() {
         return tierFiveValue;
     }
 
@@ -172,7 +171,7 @@ public class Property implements Serializable {
         this.tierFiveValue = value;
     }
 
-    public double getMortgageValue() {
+    public int getMortgageValue() {
         return mortgageValue;
     }
 
@@ -181,7 +180,7 @@ public class Property implements Serializable {
     }
 
     // When a player has all properties of a set
-    public double getTierOneSetValue() {
+    public int getTierOneSetValue() {
         return tierOneSetValue;
     }
 

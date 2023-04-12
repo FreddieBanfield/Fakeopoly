@@ -2,6 +2,7 @@ package Client.UI;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.StackWalker.Option;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -479,31 +481,132 @@ public class GameView {
     }
 
     // Gets property info from server to display in modal
+    // Decides what modal to display by what the property ID is
     public void createPropertyModalInfo(int id) {
         try {
-            int WIDTH = 220;
-            int HEIGHT = 300;
-
             Property property = client.getPlayerService().getPropertyById(id);
-            ImageIcon background = new ImageIcon(
-                    modalImages[id].getScaledInstance((int) WIDTH,
-                            (int) HEIGHT, Image.SCALE_SMOOTH));
+            ImageIcon background;
 
-            String title = property.getName();
-            String contents = property.getColor();
-            Object[] btnOptions = { "Buy House",
-                    "Sell House",
-                    "Mortgage" };
+            // Go, Jail, Parking, Go to Jail
+            if (id == 0 || id == 10 || id == 20 || id == 30) {
+                int WIDTH = 320;
+                int HEIGHT = 320;
 
-            showPropertyModal(WIDTH, HEIGHT, title, contents, background, btnOptions);
+                background = new ImageIcon(
+                        modalImages[id].getScaledInstance((int) WIDTH,
+                                (int) HEIGHT, Image.SCALE_SMOOTH));
+
+                Object[] btnOptions = null;
+
+                showNonPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+            }
+            // Community Chest
+            else if (id == 2 || id == 17 || id == 33) {
+                int WIDTH = 220;
+                int HEIGHT = 320;
+
+                background = new ImageIcon(
+                        modalImages[id].getScaledInstance((int) WIDTH,
+                                (int) HEIGHT, Image.SCALE_SMOOTH));
+
+                Object[] btnOptions = { "Select Card" };
+
+                showNonPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+            }
+            // Chance
+            else if (id == 7 || id == 22 || id == 36) {
+                int WIDTH = 220;
+                int HEIGHT = 320;
+
+                background = new ImageIcon(
+                        modalImages[id].getScaledInstance((int) WIDTH,
+                                (int) HEIGHT, Image.SCALE_SMOOTH));
+
+                Object[] btnOptions = { "Select Card" };
+
+                showNonPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+            }
+            // Tax
+            else if (id == 4 || id == 38) {
+                int WIDTH = 220;
+                int HEIGHT = 320;
+
+                background = new ImageIcon(
+                        modalImages[id].getScaledInstance((int) WIDTH,
+                                (int) HEIGHT, Image.SCALE_SMOOTH));
+
+                Object[] btnOptions = { "Pay" };
+
+                showNonPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+            }
+            // Train
+            else if (id == 5 || id == 15 || id == 25 || id == 35) {
+                int WIDTH = 220;
+                int HEIGHT = 320;
+
+                background = new ImageIcon(
+                        modalImages[id].getScaledInstance((int) WIDTH,
+                                (int) HEIGHT, Image.SCALE_SMOOTH));
+
+                Object[] btnOptions = { "Mortgage" };
+
+                showTrainModal(WIDTH, HEIGHT, property, background, btnOptions);
+            }
+            // Electricity Company and Water Works
+            else if (id == 12 || id == 28) {
+                int WIDTH = 220;
+                int HEIGHT = 320;
+
+                background = new ImageIcon(
+                        modalImages[id].getScaledInstance((int) WIDTH,
+                                (int) HEIGHT, Image.SCALE_SMOOTH));
+
+                Object[] btnOptions = { "Mortgage" };
+
+                showUtilityModal(WIDTH, HEIGHT, property, background, btnOptions);
+            }
+            // Properties
+            else {
+                int WIDTH = 220;
+                int HEIGHT = 320;
+
+                background = new ImageIcon(
+                        modalImages[id].getScaledInstance((int) WIDTH,
+                                (int) HEIGHT, Image.SCALE_SMOOTH));
+
+                Object[] btnOptions = { "Buy House",
+                        "Sell House",
+                        "Mortgage" };
+
+                showPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+
+            }
         } catch (RemoteException e) {
             System.out.println(e);
         }
     }
 
     // Creates actual modal object
-    private void showPropertyModal(int WIDTH, int HEIGHT, String title, String contents, ImageIcon background,
+    private void showPropertyModal(int WIDTH, int HEIGHT, Property property, ImageIcon background,
             Object[] btnOptions) {
+
+        // Variables
+        String title = property.getName();
+        String TierZeroValue = "Rent $" + property.getTierZeroValue();
+        String TierOneText = "With 1 House";
+        String TierOneValue = "$" + property.getTierOneValue();
+        String TierTwoText = "With 2 House";
+        String TierTwoValue = "$" + property.getTierTwoValue();
+        String TierThreeText = "With 3 House";
+        String TierThreeValue = "$" + property.getTierThreeValue();
+        String TierFourText = "With 4 House";
+        String TierFourValue = "$" + property.getTierFourValue();
+        String TierFiveText = "With HOTEL";
+        String TierFiveValue = "$" + property.getTierFiveValue();
+        String mortgageValue = "Mortgage Value $" + property.getMortgageValue();
+        String houseCostValue = "Houses Cost $" + property.getPricePerHouse() + " Each";
+        String hotelsCostValue = "Houses Cost $" + property.getPricePerHouse() + " Each";
+        String hotelsCostTextValue = "plus 4 houses";
 
         // create a dialog Box
         JDialog propertyDialog = new JDialog(frame, title);
@@ -525,20 +628,255 @@ public class GameView {
             }
         });
 
-        // Panel
+        // Panel (aka its a label as we need image background)
         JLabel backgroundLbl = new JLabel(background);
         backgroundLbl.setBounds(0, 0, WIDTH, HEIGHT);
 
         // Header
         JLabel titleLbl = new JLabel(title, SwingConstants.CENTER);
-        titleLbl.setBounds(0, 20, WIDTH, 30);
+        titleLbl.setFont(new Font("Serif", Font.BOLD, 24));
+        titleLbl.setForeground(Color.white);
+        titleLbl.setBounds(0, 18, WIDTH, 30);
 
         // Components
-        JLabel contentsLbl = new JLabel(contents);
+        JLabel rentTier0Lbl = new JLabel(TierZeroValue, SwingConstants.CENTER);
+        rentTier0Lbl.setFont(new Font("Serif", Font.BOLD, 16));
+        rentTier0Lbl.setBounds(0, 70, WIDTH, 30);
+        JLabel rentTier1TextLbl = new JLabel(TierOneText, SwingConstants.LEFT);
+        rentTier1TextLbl.setBounds(20, 90, WIDTH - 40, 30);
+        JLabel rentTier1ValueLbl = new JLabel(TierOneValue, SwingConstants.RIGHT);
+        rentTier1ValueLbl.setBounds(20, 90, WIDTH - 40, 30);
+        JLabel rentTier2TextLbl = new JLabel(TierTwoText, SwingConstants.LEFT);
+        rentTier2TextLbl.setBounds(20, 110, WIDTH - 40, 30);
+        JLabel rentTier2ValueLbl = new JLabel(TierTwoValue, SwingConstants.RIGHT);
+        rentTier2ValueLbl.setBounds(20, 110, WIDTH - 40, 30);
+        JLabel rentTier3TextLbl = new JLabel(TierThreeText, SwingConstants.LEFT);
+        rentTier3TextLbl.setBounds(20, 130, WIDTH - 40, 30);
+        JLabel rentTier3ValueLbl = new JLabel(TierThreeValue, SwingConstants.RIGHT);
+        rentTier3ValueLbl.setBounds(20, 130, WIDTH - 40, 30);
+        JLabel rentTier4TextLbl = new JLabel(TierFourText, SwingConstants.LEFT);
+        rentTier4TextLbl.setBounds(20, 150, WIDTH - 40, 30);
+        JLabel rentTier4ValueLbl = new JLabel(TierFourValue, SwingConstants.RIGHT);
+        rentTier4ValueLbl.setBounds(20, 150, WIDTH - 40, 30);
+        JLabel rentTier5TextLbl = new JLabel(TierFiveText, SwingConstants.LEFT);
+        rentTier5TextLbl.setBounds(20, 170, WIDTH - 40, 30);
+        JLabel rentTier5ValueLbl = new JLabel(TierFiveValue, SwingConstants.RIGHT);
+        rentTier5ValueLbl.setBounds(20, 170, WIDTH - 40, 30);
+        JLabel mortgageLbl = new JLabel(mortgageValue, SwingConstants.CENTER);
+        mortgageLbl.setBounds(0, 190, WIDTH, 30);
+        JLabel houseCostLbl = new JLabel(houseCostValue, SwingConstants.CENTER);
+        houseCostLbl.setBounds(0, 210, WIDTH, 30);
+        JLabel hotelCostLbl = new JLabel(hotelsCostValue, SwingConstants.CENTER);
+        hotelCostLbl.setBounds(0, 230, WIDTH, 30);
+        JLabel hotelCostTextLbl = new JLabel(hotelsCostTextValue, SwingConstants.CENTER);
+        hotelCostTextLbl.setBounds(0, 240, WIDTH, 30);
 
         // Adds components
         backgroundLbl.add(titleLbl);
-        backgroundLbl.add(contentsLbl);
+        backgroundLbl.add(rentTier0Lbl);
+        backgroundLbl.add(rentTier1TextLbl);
+        backgroundLbl.add(rentTier1ValueLbl);
+        backgroundLbl.add(rentTier2TextLbl);
+        backgroundLbl.add(rentTier2ValueLbl);
+        backgroundLbl.add(rentTier3TextLbl);
+        backgroundLbl.add(rentTier3ValueLbl);
+        backgroundLbl.add(rentTier4TextLbl);
+        backgroundLbl.add(rentTier4ValueLbl);
+        backgroundLbl.add(rentTier5TextLbl);
+        backgroundLbl.add(rentTier5ValueLbl);
+        backgroundLbl.add(mortgageLbl);
+        backgroundLbl.add(houseCostLbl);
+        backgroundLbl.add(hotelCostLbl);
+        backgroundLbl.add(hotelCostTextLbl);
+        propertyDialog.add(backgroundLbl);
+
+        // set visibility of dialog
+        propertyDialog.setLocationRelativeTo(boardPanel); // Centers screen
+        propertyDialog.setVisible(true);
+    }
+
+    // Creates actual modal object
+    private void showTrainModal(int WIDTH, int HEIGHT, Property property, ImageIcon background,
+
+            Object[] btnOptions) {
+
+        // Variables
+        String title = property.getName();
+        String TierZeroText = "Rent";
+        String TierZeroValue = "$" + property.getTierZeroValue();
+        String TierOneText = "If 2 are owned";
+        String TierOneValue = "$" + property.getTierOneValue();
+        String TierTwoText = "If 3 are owned";
+        String TierTwoValue = "$" + property.getTierTwoValue();
+        String TierThreeText = "If 4 are owned";
+        String TierThreeValue = "$" + property.getTierThreeValue();
+        String mortgageValue = "Mortgage Value $" + property.getMortgageValue();
+
+        // create a dialog Box
+        JDialog propertyDialog = new JDialog(frame, title);
+        propertyDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        propertyDialog.setUndecorated(true);
+        propertyDialog.setSize(WIDTH, HEIGHT);
+        propertyDialog.addWindowFocusListener(new WindowFocusListener() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                // do nothing
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
+                    return;
+                }
+                propertyDialog.dispose();
+            }
+        });
+
+        // Panel (aka its a label as we need image background)
+        JLabel backgroundLbl = new JLabel(background);
+        backgroundLbl.setBounds(0, 0, WIDTH, HEIGHT);
+
+        // Header
+        JLabel titleLbl = new JLabel(title, SwingConstants.CENTER);
+        titleLbl.setFont(new Font("Serif", Font.BOLD, 24));
+        titleLbl.setForeground(Color.white);
+        titleLbl.setBounds(0, 10, WIDTH, 30);
+
+        // Components
+        JLabel rentTier0TextLbl = new JLabel(TierZeroText, SwingConstants.LEFT);
+        rentTier0TextLbl.setBounds(20, 40, WIDTH - 40, 30);
+        JLabel rentTier0ValueLbl = new JLabel(TierZeroValue, SwingConstants.RIGHT);
+        rentTier0ValueLbl.setBounds(20, 40, WIDTH - 40, 30);
+        JLabel rentTier1TextLbl = new JLabel(TierOneText, SwingConstants.LEFT);
+        rentTier1TextLbl.setBounds(20, 55, WIDTH - 40, 30);
+        JLabel rentTier1ValueLbl = new JLabel(TierOneValue, SwingConstants.RIGHT);
+        rentTier1ValueLbl.setBounds(20, 55, WIDTH - 40, 30);
+        JLabel rentTier2TextLbl = new JLabel(TierTwoText, SwingConstants.LEFT);
+        rentTier2TextLbl.setBounds(20, 70, WIDTH - 40, 30);
+        JLabel rentTier2ValueLbl = new JLabel(TierTwoValue, SwingConstants.RIGHT);
+        rentTier2ValueLbl.setBounds(20, 70, WIDTH - 40, 30);
+        JLabel rentTier3TextLbl = new JLabel(TierThreeText, SwingConstants.LEFT);
+        rentTier3TextLbl.setBounds(20, 85, WIDTH - 40, 30);
+        JLabel rentTier3ValueLbl = new JLabel(TierThreeValue, SwingConstants.RIGHT);
+        rentTier3ValueLbl.setBounds(20, 85, WIDTH - 40, 30);
+        JLabel mortgageLbl = new JLabel(mortgageValue, SwingConstants.CENTER);
+        mortgageLbl.setBounds(0, 260, WIDTH, 30);
+
+        // Adds components
+        backgroundLbl.add(titleLbl);
+        backgroundLbl.add(rentTier0TextLbl);
+        backgroundLbl.add(rentTier0ValueLbl);
+        backgroundLbl.add(rentTier1TextLbl);
+        backgroundLbl.add(rentTier1ValueLbl);
+        backgroundLbl.add(rentTier2TextLbl);
+        backgroundLbl.add(rentTier2ValueLbl);
+        backgroundLbl.add(rentTier3TextLbl);
+        backgroundLbl.add(rentTier3ValueLbl);
+        backgroundLbl.add(mortgageLbl);
+        propertyDialog.add(backgroundLbl);
+
+        // set visibility of dialog
+        propertyDialog.setLocationRelativeTo(boardPanel); // Centers screen
+        propertyDialog.setVisible(true);
+    }
+
+    // Creates actual modal object
+    private void showUtilityModal(int WIDTH, int HEIGHT, Property property, ImageIcon background,
+            Object[] btnOptions) {
+
+        // Variables
+        String title = property.getName();
+        String text = "<html>If one \"Utility\" is owned<br/>rent is 4 times amount shown<br/>on dice.</br>If both \"Utilities\" are owned<br/>rent is 10 times amount shown<br/>on dice</html>";
+        String mortgageValue = "Mortgage Value $" + property.getMortgageValue();
+
+        // create a dialog Box
+        JDialog propertyDialog = new JDialog(frame, title);
+        propertyDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        propertyDialog.setUndecorated(true);
+        propertyDialog.setSize(WIDTH, HEIGHT);
+        propertyDialog.addWindowFocusListener(new WindowFocusListener() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                // do nothing
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
+                    return;
+                }
+                propertyDialog.dispose();
+            }
+        });
+
+        // Panel (aka its a label as we need image background)
+        JLabel backgroundLbl = new JLabel(background);
+        backgroundLbl.setBounds(0, 0, WIDTH, HEIGHT);
+
+        // Header
+        JLabel titleLbl = new JLabel(title, SwingConstants.CENTER);
+        titleLbl.setFont(new Font("Serif", Font.BOLD, 24));
+        titleLbl.setForeground(Color.white);
+        titleLbl.setBounds(0, 10, WIDTH, 30);
+
+        // Components
+        JLabel rentTier0TextLbl = new JLabel(text, SwingConstants.LEFT);
+        rentTier0TextLbl.setBounds(20, 40, WIDTH - 40, 30);
+        JLabel mortgageLbl = new JLabel(mortgageValue, SwingConstants.CENTER);
+        mortgageLbl.setBounds(0, 260, WIDTH, 30);
+
+        // Adds components
+        backgroundLbl.add(titleLbl);
+        backgroundLbl.add(rentTier0TextLbl);
+        backgroundLbl.add(mortgageLbl);
+        propertyDialog.add(backgroundLbl);
+
+        // set visibility of dialog
+        propertyDialog.setLocationRelativeTo(boardPanel); // Centers screen
+        propertyDialog.setVisible(true);
+    }
+
+    // Creates actual modal object
+    private void showNonPropertyModal(int WIDTH, int HEIGHT, Property property, ImageIcon background,
+            Object[] btnOptions) {
+        // Variables
+
+        String title = property.getName();
+        // create a dialog Box
+        JDialog propertyDialog = new JDialog(frame, title);
+        propertyDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        propertyDialog.setUndecorated(true);
+        propertyDialog.setSize(WIDTH, HEIGHT);
+        propertyDialog.addWindowFocusListener(new WindowFocusListener() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                // do nothing
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
+                    return;
+                }
+                propertyDialog.dispose();
+            }
+        });
+
+        // Panel (aka its a label as we need image background)
+        JLabel backgroundLbl = new JLabel(background);
+        backgroundLbl.setBounds(0, 0, WIDTH, HEIGHT);
+
+        // Button
+        if (btnOptions != null) {
+            JButton cardBtn = new JButton();
+            cardBtn.setText(btnOptions[0].toString());
+            cardBtn.setBounds(WIDTH / 2 - 50, 270, 100, 30);
+
+            // Adds components
+            backgroundLbl.add(cardBtn);
+        }
+
+        // Adds components
         propertyDialog.add(backgroundLbl);
 
         // set visibility of dialog
