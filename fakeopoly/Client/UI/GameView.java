@@ -39,13 +39,13 @@ import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
 
 public class GameView {
-    //private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
-    //private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
-    //private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
+    private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
+    private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
+    private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
     // Brady's filepath for whatever reason
-    private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
-    private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
-    private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
+    // private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
+    // private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
+    // private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
 
     private JFrame frame;
     private int frameWidth;
@@ -112,6 +112,7 @@ public class GameView {
         controlsPanel.setPreferredSize(new Dimension(370, frameHeight));
 
         // Components
+        getDiceImages();
         createBoard();
         setControlPanelButtons();
         setControlPanelChat();
@@ -209,11 +210,12 @@ public class GameView {
         for (int i = 0; i < playerDetails.length; i++) {
             try {
                 Color colour = client.getPlayerService().getColorById(i);
-                JLabel color = new JLabel("" + client.getPlayerService().getNameById(i).charAt(0), SwingConstants.CENTER);
+                JLabel color = new JLabel("" + client.getPlayerService().getNameById(i).charAt(0),
+                        SwingConstants.CENTER);
                 color.setBackground(colour);
                 color.setOpaque(true);
-                color.setBounds(startingX - 27,startingY + (yOffset * i) + 25,20,20);
-                color.setFont(new Font("Serif",Font.BOLD, 12));
+                color.setBounds(startingX - 27, startingY + (yOffset * i) + 25, 20, 20);
+                color.setFont(new Font("Serif", Font.BOLD, 12));
                 color.setForeground(Color.black);
                 color.setBorder(BorderFactory.createLineBorder(Color.black, 2));
                 controlsPanel.add(color);
@@ -298,9 +300,21 @@ public class GameView {
         }
     }
 
+    // Gets random number for both dice and updates clients
     private void performDiceRoll() {
         int dice1 = (int) (Math.random() * 6 + 1);
         int dice2 = (int) (Math.random() * 6 + 1);
+
+        int sum = dice1 + dice2;
+        try {
+            client.getPlayerService().displayDiceRoll(dice1, dice2);
+        } catch (RemoteException e) {
+            System.out.print(e);
+        }
+    }
+
+    // Gets images of dice from files
+    private void getDiceImages() {
         try {
             diceImages[0] = ImageIO.read(new File(DICEPATH + "dice1.png"));
             diceImages[1] = ImageIO.read(new File(DICEPATH + "dice2.png"));
@@ -311,30 +325,19 @@ public class GameView {
         } catch (Exception e) {
             System.out.print(e);
         }
+    }
 
-        int sum = dice1 + dice2;
-        try {
-            client.getPlayerService().displayDiceRoll(dice1, dice2, client.getClientId());
-        } catch (RemoteException e) {
-            System.out.print(e);
-        }
-        displayDiceRoll(dice1, dice2);
+    // Displays image of dice
+    public void displayDiceRoll(int dice1, int dice2) {
+        diceTile[0].setIcon(new ImageIcon(
+                diceImages[dice1 - 1].getScaledInstance((int) (diceImages[dice1 - 1].getWidth() / imageScale),
+                        (int) (diceImages[dice1 - 1].getHeight() / imageScale), Image.SCALE_SMOOTH)));
+        diceTile[1].setIcon(new ImageIcon(
+                diceImages[dice2 - 1].getScaledInstance((int) (diceImages[dice2 - 1].getWidth() / imageScale),
+                        (int) (diceImages[dice2 - 1].getHeight() / imageScale), Image.SCALE_SMOOTH)));
     }
-    public void displayDiceRoll(int dice1, int dice2){
-        try{
-            diceImages[0] = ImageIO.read(new File(DICEPATH + "dice1.png"));
-            diceImages[1] = ImageIO.read(new File(DICEPATH + "dice2.png"));
-            diceImages[2] = ImageIO.read(new File(DICEPATH + "dice3.png"));
-            diceImages[3] = ImageIO.read(new File(DICEPATH + "dice4.png"));
-            diceImages[4] = ImageIO.read(new File(DICEPATH + "dice5.png"));
-            diceImages[5] = ImageIO.read(new File(DICEPATH + "dice6.png"));
-        }catch(Exception e){
-            System.out.print(e);
-        }
-        diceTile[0].setIcon(new ImageIcon(diceImages[dice1-1].getScaledInstance((int) (diceImages[dice1-1].getWidth() / imageScale), (int) (diceImages[dice1-1].getHeight() / imageScale), Image.SCALE_SMOOTH)));
-        diceTile[1].setIcon(new ImageIcon(diceImages[dice2-1].getScaledInstance((int) (diceImages[dice2-1].getWidth() / imageScale), (int) (diceImages[dice2-1].getHeight() / imageScale), Image.SCALE_SMOOTH)));
-    }
-    private void endTurn(){
+
+    private void endTurn() {
 
         diceTile[0].setIcon(new ImageIcon());
         diceTile[1].setIcon(new ImageIcon());

@@ -77,7 +77,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         } else {
             turn++;
         }
-        
+
         try {
             for (int i = 0; i < totalPlayers; i++) {
                 players.get(i).getClient().nextTurn(turn);
@@ -103,16 +103,16 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     }
 
     @Override
-    public void displayDiceRoll(int dice1, int dice2, int id){
-        try{
-            for(int i = 0; i < totalPlayers; i++){
-                if(i != id)
-                    players.get(i).getClient().displayDiceRoll(dice1,dice2);
+    public void displayDiceRoll(int dice1, int dice2) {
+        try {
+            for (int i = 0; i < totalPlayers; i++) {
+                players.get(i).getClient().displayDiceRoll(dice1, dice2);
             }
         } catch (RemoteException e) {
             System.out.println(e);
         }
     }
+
     @Override
     public void updatePlayerList() throws RemoteException {
         // Get list of player names
