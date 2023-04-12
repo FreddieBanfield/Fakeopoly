@@ -553,7 +553,7 @@ public class GameView {
                 showTrainModal(WIDTH, HEIGHT, property, background, btnOptions);
             }
             // Electricity Company and Water Works
-            else if (id == 12 || id == 28) {
+            else if (id == 12 || id == 27) {
                 int WIDTH = 220;
                 int HEIGHT = 320;
 
@@ -621,10 +621,15 @@ public class GameView {
 
             @Override
             public void windowLostFocus(WindowEvent e) {
-                if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
-                    return;
+                try {
+                    if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
+                        return;
+                    }
+                    propertyDialog.dispose();
+                } catch (Exception error) {
+                    System.out.println(error);
+                    propertyDialog.dispose();
                 }
-                propertyDialog.dispose();
             }
         });
 
@@ -725,10 +730,15 @@ public class GameView {
 
             @Override
             public void windowLostFocus(WindowEvent e) {
-                if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
-                    return;
+                try {
+                    if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
+                        return;
+                    }
+                    propertyDialog.dispose();
+                } catch (Exception error) {
+                    System.out.println(error);
+                    propertyDialog.dispose();
                 }
-                propertyDialog.dispose();
             }
         });
 
@@ -786,7 +796,7 @@ public class GameView {
 
         // Variables
         String title = property.getName();
-        String text = "<html>If one \"Utility\" is owned<br/>rent is 4 times amount shown<br/>on dice.</br>If both \"Utilities\" are owned<br/>rent is 10 times amount shown<br/>on dice</html>";
+        String text = "<html>If one \"Utility\" is owned<br/>rent is 4 times amount shown<br/>on dice.<br/>If both \"Utilities\" are owned<br/>rent is 10 times amount shown<br/>on dice</html>";
         String mortgageValue = "Mortgage Value $" + property.getMortgageValue();
 
         // create a dialog Box
@@ -802,10 +812,15 @@ public class GameView {
 
             @Override
             public void windowLostFocus(WindowEvent e) {
-                if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
-                    return;
+                try {
+                    if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
+                        return;
+                    }
+                    propertyDialog.dispose();
+                } catch (Exception error) {
+                    System.out.println(error);
+                    propertyDialog.dispose();
                 }
-                propertyDialog.dispose();
             }
         });
 
@@ -821,9 +836,9 @@ public class GameView {
 
         // Components
         JLabel rentTier0TextLbl = new JLabel(text, SwingConstants.LEFT);
-        rentTier0TextLbl.setBounds(20, 40, WIDTH - 40, 30);
+        rentTier0TextLbl.setBounds(20, 200, WIDTH - 40, 110);
         JLabel mortgageLbl = new JLabel(mortgageValue, SwingConstants.CENTER);
-        mortgageLbl.setBounds(0, 260, WIDTH, 30);
+        mortgageLbl.setBounds(0, 40, WIDTH, 30);
 
         // Adds components
         backgroundLbl.add(titleLbl);
@@ -855,10 +870,15 @@ public class GameView {
 
             @Override
             public void windowLostFocus(WindowEvent e) {
-                if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
-                    return;
+                try {
+                    if (SwingUtilities.isDescendingFrom(e.getOppositeWindow(), propertyDialog)) {
+                        return;
+                    }
+                    propertyDialog.dispose();
+                } catch (Exception error) {
+                    System.out.println(error);
+                    propertyDialog.dispose();
                 }
-                propertyDialog.dispose();
             }
         });
 

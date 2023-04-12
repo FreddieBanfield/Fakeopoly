@@ -405,21 +405,6 @@
         "tierFiveValue" : 1150
     },
     {
-        "name" : "Coventry St",
-        "color" : "Yellow",
-        "price" : 260,
-        "tier" : 0,
-        "pricePerHouse" : 150,
-        "owner" : null,
-        "isMortgaged" : false,
-        "tierZeroValue" : 22,
-        "tierOneValue" : 110,
-        "tierTwoValue" : 330,
-        "tierThreeValue" : 800,
-        "tierFourValue" : 975,
-        "tierFiveValue" : 1150
-    },
-    {
         "name" : "Water Works",
         "color" : "None",
         "price" : 150,
@@ -433,6 +418,21 @@
         "tierThreeValue" : 0,
         "tierFourValue" : 0,
         "tierFiveValue" : 0
+    },
+    {
+        "name" : "Coventry St",
+        "color" : "Yellow",
+        "price" : 260,
+        "tier" : 0,
+        "pricePerHouse" : 150,
+        "owner" : null,
+        "isMortgaged" : false,
+        "tierZeroValue" : 22,
+        "tierOneValue" : 110,
+        "tierTwoValue" : 330,
+        "tierThreeValue" : 800,
+        "tierFourValue" : 975,
+        "tierFiveValue" : 1150
     },
     {
         "name" : "Piccadilly",

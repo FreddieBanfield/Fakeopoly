@@ -32,10 +32,6 @@ public class Property implements Serializable {
     // Tier 5
     private int tierFiveValue; // Red house on property
 
-    // Computed Values
-    private int mortgageValue; // Value a player gets when mortgaging a property
-    private int tierOneSetValue; // Value when a player has all properties of that color
-
     /**
      * Constructor
      * we can instantiate the properties programmatically from pulling the data from
@@ -57,9 +53,6 @@ public class Property implements Serializable {
         this.tierThreeValue = tierThreeValue;
         this.tierFourValue = tierFourValue;
         this.tierFiveValue = tierFiveValue;
-
-        this.mortgageValue = price / 2;
-        this.tierOneSetValue = tierOneValue * 2;
     }
 
     // Default constructor for json conversion
@@ -155,7 +148,7 @@ public class Property implements Serializable {
         this.tierThreeValue = value;
     }
 
-    public double getTierFourValue() {
+    public int getTierFourValue() {
         return tierFourValue;
     }
 
@@ -172,21 +165,11 @@ public class Property implements Serializable {
     }
 
     public int getMortgageValue() {
-        return mortgageValue;
-    }
-
-    public void setMortgageValue(int value) {
-        this.mortgageValue = value;
+        return price / 2;
     }
 
     // When a player has all properties of a set
     public int getTierOneSetValue() {
-        return tierOneSetValue;
+        return tierZeroValue * 2;
     }
-
-    // When a player has all properties of a set
-    public void setTierOneSetValue(int value) {
-        this.tierOneSetValue = value;
-    }
-
 }
