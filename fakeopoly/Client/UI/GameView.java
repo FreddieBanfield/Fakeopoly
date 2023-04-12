@@ -386,7 +386,7 @@ public class GameView {
     private void performDiceRoll() {
         //for loop for animation
         try {
-            client.getPlayerService().displayDiceRoll();
+            client.getPlayerService().displayDiceRoll(client.getClientId());
         } catch (Exception e) {
             System.out.print(e);    
         }
@@ -441,7 +441,10 @@ public class GameView {
         }
 
     }
-
+    public void wipe(){
+        diceTile[0].setIcon(new ImageIcon());
+        diceTile[1].setIcon(new ImageIcon());
+    }
     private void loadPropertyImages() {
         // Get images from folder and store as buffered image
         try {

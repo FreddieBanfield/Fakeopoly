@@ -22,4 +22,6 @@ public interface ClientServiceIF extends Remote {
     public void displayDiceRoll(int dice1, int dice2) throws RemoteException;
 
     public void updatePlayerLocation(int newLocation, int id) throws RemoteException;
+
+    public void wipe() throws RemoteException;
 }

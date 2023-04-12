@@ -83,10 +83,12 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         try {
             for (int i = 0; i < totalPlayers; i++) {
                 players.get(i).getClient().nextTurn(turn);
+                wipe(i);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
+        
     }
 
     /**
@@ -105,9 +107,10 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     }
 
     @Override
-    public void displayDiceRoll() {
+    public void displayDiceRoll(int id) {
         Thread thread = new Thread(new Runnable() {
             int delay = 50;
+            int sum = 0;
             @Override
             public void run(){
                 for(int i = 0; i < 10; i++){
@@ -126,8 +129,9 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                         }
                     }
                     delay *= 1.3;
+                    sum = dice1 + dice2;
                 }
-
+                updatePlayerLocation(sum, id);
             }
         });
         thread.start();
@@ -223,8 +227,14 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         return totalPlayers;
     }
 
-    @Override
-    public void updatePlayerLocation(int diceSum, int id) throws RemoteException {
+    private void wipe(int id){
+        try{
+            players.get(id).getClient().wipe();
+        }catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    private void updatePlayerLocation(int diceSum, int id) {
         // Update Server Player object
         int currentLocation = players.get(id).getLocation();
         int newLocation = currentLocation + diceSum;
@@ -235,7 +245,11 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         // Update Clients UI
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i) != null)
-                players.get(i).getClient().updatePlayerLocation(newLocation, id);
+                try {
+                    players.get(i).getClient().updatePlayerLocation(newLocation, id);
+                } catch (RemoteException e) {
+                    System.out.println(e);
+                }
         }
     }
 }
