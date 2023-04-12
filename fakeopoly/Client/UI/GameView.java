@@ -2,6 +2,7 @@ package Client.UI;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import Client.GameClient;
 import Shared.Objects.Message;
@@ -190,13 +192,13 @@ public class GameView {
         for(int i = 0; i < playerDetails.length; i++){
             try{
                 Color colour = client.getPlayerService().getColorById(i);
-                JButton color = new JButton();
+                JLabel color = new JLabel("" + client.getPlayerService().getNameById(i).charAt(0), SwingConstants.CENTER);
                 color.setBackground(colour);
                 color.setOpaque(true);
                 color.setBounds(startingX - 27,startingY + (yOffset * i) + 25,20,20);
-                color.setVisible(true);
-
-                color.setEnabled(false);
+                color.setFont(new Font("Serif",Font.BOLD, 12));
+                color.setForeground(Color.black);
+                color.setBorder(BorderFactory.createLineBorder(Color.black, 2));
                 controlsPanel.add(color);
 
                 playerDetails[i] = new JLabel(setPlayerDetailsString(i));
