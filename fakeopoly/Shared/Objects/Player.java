@@ -15,6 +15,7 @@ import Shared.Interfaces.ClientServiceIF;
  */
 public class Player implements Serializable {
 
+    private int id;
     private String name;
     private Color color;
     private int money;
@@ -22,15 +23,19 @@ public class Player implements Serializable {
     private ClientServiceIF _clientService;
     private boolean isReady;
     private int location;
+    private int lastRoll;
+
     private boolean inJail = false;
     private int doubles = 0;
     private int jailCount = 0;
+
     // constructor
     public Player(String name, Color color) {
         this.name = name;
         this.color = color;
         this.isReady = false;
         this.location = 0;
+        this.money = 1500;
     }
 
     public boolean connectClient(String clientAddress, int clientPort, int id) {
@@ -46,23 +51,36 @@ public class Player implements Serializable {
         }
         return isSuccess;
     }
-    public boolean getJail(){
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean getJail() {
         return inJail;
     }
 
-    public void setJail(boolean jail){
+    public void setJail(boolean jail) {
         inJail = jail;
     }
-    public int increaseDoubles(){
+
+    public int increaseDoubles() {
         doubles++;
         return doubles;
     }
-    public int getDoubles(){
+
+    public int getDoubles() {
         return doubles;
     }
-    public void setDoubles(int x){
+
+    public void setDoubles(int x) {
         doubles = x;
     }
+
     // getters and setters
     public ClientServiceIF getClient() {
         return _clientService;
@@ -92,9 +110,10 @@ public class Player implements Serializable {
         this.location = location;
     }
 
-    public void increaseMoney(int money){
+    public void increaseMoney(int money) {
         this.money += money;
     }
+
     public Boolean getIsReady() {
         return isReady;
     }
@@ -103,11 +122,20 @@ public class Player implements Serializable {
         this.isReady = isReady;
     }
 
-    public int increaseJailCount(){
+    public int getLastRoll() {
+        return lastRoll;
+    }
+
+    public void setLastRoll(int lastRoll) {
+        this.lastRoll = lastRoll;
+    }
+
+    public int increaseJailCount() {
         jailCount++;
         return jailCount;
     }
-    public void setJailCount(int count){
+
+    public void setJailCount(int count) {
         jailCount = count;
     }
 }

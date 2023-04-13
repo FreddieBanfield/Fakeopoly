@@ -17,7 +17,7 @@ public class PropertyActionListener implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        gameView.createPropertyModalInfo(id);
+        gameView.createPropertyInfoModalInfo(id);
     }
 
     @Override

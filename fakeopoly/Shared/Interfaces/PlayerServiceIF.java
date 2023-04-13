@@ -6,11 +6,14 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import Shared.Objects.Message;
+import Shared.Objects.Player;
 import Shared.Objects.Property;
 
 public interface PlayerServiceIF extends Remote {
 
     // Declaring the method prototype
+    public Player getPlayerById(int id) throws RemoteException;
+
     public int getNumberOfPlayers() throws RemoteException;
 
     public void updatePlayerList() throws RemoteException;
@@ -50,5 +53,11 @@ public interface PlayerServiceIF extends Remote {
     public String getMessages() throws RemoteException;
 
     public ArrayList<Property> getProperties() throws RemoteException;
+
+    public void setPlayerMoney(int id, int value) throws RemoteException;
+
+    public void setPropertyOwner(int propertyId, int id) throws RemoteException;
+
+
 
 }

@@ -12,13 +12,9 @@ import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-//import java.lang.StackWalker.Option;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 import java.rmi.RemoteException;
 
 import javax.imageio.ImageIO;
@@ -29,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -39,18 +36,19 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import Client.GameClient;
 import Shared.Objects.Message;
+import Shared.Objects.Player;
 import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
 import javafx.scene.layout.Border;
 
 public class GameView {
-    //private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
-    //private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
-    //private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
+    private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
+    private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
+    private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
     // Brady's filepath for whatever reason
-    private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
-    private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
-    private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
+    // private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
+    // private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
+    // private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
 
     private JFrame frame;
     private int frameWidth;
@@ -163,6 +161,7 @@ public class GameView {
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
     }
+
     private void createPlayerIcon(int id, int propertyId) {
         try {
             Color colour = client.getPlayerService().getColorById(id);
@@ -218,7 +217,82 @@ public class GameView {
             boardTiles[propertyId].add(playerIcons[id]);
             boardPanel.repaint();
             boardPanel.revalidate();
+
+            // Check if your turn
+            if (id == client.getClientId())
+                landedOnPropertyHandler(propertyId, id);
         } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    // Deals with handling the distribution of money in the game
+    private void landedOnPropertyHandler(int propertyId, int id) {
+        // Check if player can purchase a purchasable property and it is your turn
+        Property currentProperty;
+        try {
+            currentProperty = client.getPlayerService().getPropertyById(propertyId);
+            // Utility Billing
+            if (currentProperty.getColor().equals("Utility") && currentProperty.getOwner() != null) {
+                // Charges player rent
+                Player currentPlayer = client.getPlayerService().getPlayerById(id);
+                // Get rent cost
+                int rentCost;
+                if (currentProperty.getTier() == 1)
+                    rentCost = 10 * currentPlayer.getLastRoll();
+                else
+                    rentCost = 4 * currentPlayer.getLastRoll();
+
+                // take from paying player
+                client.getPlayerService().setPlayerMoney(id, rentCost);
+                // Give to receiving player
+                client.getPlayerService().setPlayerMoney(currentProperty.getOwner().getId(), rentCost);
+            } // Tax
+            else if (currentProperty.getColor().equals("Tax")) {
+                // Get rent cost
+                int rentCost = currentProperty.getTierZeroValue();
+
+                // take from paying player
+                client.getPlayerService().setPlayerMoney(id, rentCost);
+            }
+            // if it is owned and a purchasable property PAY RENT
+            else if (currentProperty.getOwner() != null && !currentProperty.getColor().equals("None")) {
+                // Charges player rent
+                int tier = currentProperty.getTier();
+                int rentCost = 0;
+                // Get rent cost
+                switch (tier) {
+                    case 0:
+                        rentCost = currentProperty.getTierZeroValue();
+                        break;
+                    case 1:
+                        rentCost = currentProperty.getTierOneValue();
+                        break;
+                    case 2:
+                        rentCost = currentProperty.getTierTwoValue();
+                        break;
+                    case 3:
+                        rentCost = currentProperty.getTierThreeValue();
+                        break;
+                    case 4:
+                        rentCost = currentProperty.getTierFourValue();
+                        break;
+                    case 5:
+                        rentCost = currentProperty.getTierFiveValue();
+                        break;
+                }
+                // take from paying player
+                client.getPlayerService().setPlayerMoney(id, rentCost);
+                // Give to receiving player
+                client.getPlayerService().setPlayerMoney(currentProperty.getOwner().getId(), rentCost);
+            }
+            // if not owned and is a purchasable property
+            else if (currentProperty.getOwner() == null && !currentProperty.getColor().equals("None")) {
+                purchaseProperty(currentProperty, propertyId, id);
+            }
+
+            updatePlayerDetails();
+        } catch (RemoteException e) {
             System.out.println(e);
         }
     }
@@ -248,7 +322,6 @@ public class GameView {
                 sendMessageAction();
             }
         });
-
 
     }
 
@@ -394,11 +467,15 @@ public class GameView {
         manageProperties.setBounds(x + offset, frameHeight - 180, 300, 40);
 
     }
-    public void updatePlayerDetails(){
+
+    public void updatePlayerDetails() {
         for (int i = 0; i < playerDetails.length; i++) {
             playerDetails[i].setText(setPlayerDetailsString(i));
+            playerDetails[i].repaint();
+            playerDetails[i].revalidate();
         }
     }
+
     public void enableTurn() {
         rollDice.setEnabled(true);
         endTurn.setEnabled(false);
@@ -414,21 +491,48 @@ public class GameView {
             playerDetails[i].setText(setPlayerDetailsString(i));
         }
     }
-    public void enableEndturn(){
+
+    public void enableEndturn() {
         endTurn.setEnabled(true);
     }
 
     // Gets random number for both dice and updates clients
     private void performDiceRoll() {
-        //for loop for animation
+        // for loop for animation
         try {
             client.getPlayerService().displayDiceRoll(client.getClientId());
         } catch (Exception e) {
-            System.out.print(e);    
+            System.out.print(e);
         }
 
         rollDice.setEnabled(false);
     }
+
+    // Allows user to purchase property via modal
+    public void purchaseProperty(Property currentProperty, int propertyId, int id) {
+        try {
+            int result = JOptionPane.showConfirmDialog(frame,
+                    "Would you like to purchase " + currentProperty.getName() + " for $" + currentProperty.getPrice()
+                            + "?");
+            if (result == 0) {
+                Player currentPlayer = client.getPlayerService().getPlayerById(id);
+                int newBalance = currentPlayer.getMoney() - currentProperty.getPrice();
+                // If player can afford
+                if (newBalance >= 0) {
+                    client.getPlayerService().setPropertyOwner(propertyId, id);
+                    client.getPlayerService().setPlayerMoney(id, currentProperty.getPrice());
+                } else {
+                    JOptionPane.showMessageDialog(frame, "You are unable to afford the property!", "Insufficient Funds",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
+        System.out.println(currentProperty.getOwner());
+    }
+
     // Gets images of dice from files
     private void getDiceImages() {
         try {
@@ -446,11 +550,11 @@ public class GameView {
     // Displays image of dice
     public void displayDiceRoll(int dice1, int dice2) {
         diceTile[0].setIcon(new ImageIcon(
-                diceImages[dice1 - 1].getScaledInstance( diceSize ,
+                diceImages[dice1 - 1].getScaledInstance(diceSize,
                         diceSize, Image.SCALE_SMOOTH)));
         diceTile[1].setIcon(new ImageIcon(
-                diceImages[dice2 - 1].getScaledInstance( diceSize ,
-                diceSize, Image.SCALE_SMOOTH)));
+                diceImages[dice2 - 1].getScaledInstance(diceSize,
+                        diceSize, Image.SCALE_SMOOTH)));
         diceTile[0].repaint();
         diceTile[0].revalidate();
         diceTile[1].repaint();
@@ -477,10 +581,12 @@ public class GameView {
         }
 
     }
-    public void wipe(){
+
+    public void wipe() {
         diceTile[0].setIcon(new ImageIcon());
         diceTile[1].setIcon(new ImageIcon());
     }
+
     private void loadPropertyImages() {
         // Get images from folder and store as buffered image
         try {
@@ -644,7 +750,8 @@ public class GameView {
 
     // Gets property info from server to display in modal
     // Decides what modal to display by what the property ID is
-    public void createPropertyModalInfo(int id) {
+    // Only happens on click of
+    public void createPropertyInfoModalInfo(int id) {
         try {
             Property property = client.getPlayerService().getPropertyById(id);
             ImageIcon background;
@@ -658,9 +765,9 @@ public class GameView {
                         modalImages[id].getScaledInstance((int) WIDTH,
                                 (int) HEIGHT, Image.SCALE_SMOOTH));
 
-                Object[] btnOptions = null;
+                boolean hasBtns = false;
 
-                showNonPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+                showNonPropertyModal(WIDTH, HEIGHT, property, background, hasBtns);
             }
             // Community Chest
             else if (id == 2 || id == 17 || id == 33) {
@@ -671,9 +778,9 @@ public class GameView {
                         modalImages[id].getScaledInstance((int) WIDTH,
                                 (int) HEIGHT, Image.SCALE_SMOOTH));
 
-                Object[] btnOptions = { "Select Card" };
+                boolean hasBtns = false;
 
-                showNonPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+                showNonPropertyModal(WIDTH, HEIGHT, property, background, hasBtns);
             }
             // Chance
             else if (id == 7 || id == 22 || id == 36) {
@@ -684,9 +791,9 @@ public class GameView {
                         modalImages[id].getScaledInstance((int) WIDTH,
                                 (int) HEIGHT, Image.SCALE_SMOOTH));
 
-                Object[] btnOptions = { "Select Card" };
+                boolean hasBtns = false;
 
-                showNonPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+                showNonPropertyModal(WIDTH, HEIGHT, property, background, hasBtns);
             }
             // Tax
             else if (id == 4 || id == 38) {
@@ -697,9 +804,9 @@ public class GameView {
                         modalImages[id].getScaledInstance((int) WIDTH,
                                 (int) HEIGHT, Image.SCALE_SMOOTH));
 
-                Object[] btnOptions = { "Pay" };
+                boolean hasBtns = false;
 
-                showNonPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+                showNonPropertyModal(WIDTH, HEIGHT, property, background, hasBtns);
             }
             // Train
             else if (id == 5 || id == 15 || id == 25 || id == 35) {
@@ -710,9 +817,9 @@ public class GameView {
                         modalImages[id].getScaledInstance((int) WIDTH,
                                 (int) HEIGHT, Image.SCALE_SMOOTH));
 
-                Object[] btnOptions = { "Mortgage" };
+                boolean hasBtn = false;
 
-                showTrainModal(WIDTH, HEIGHT, property, background, btnOptions);
+                showTrainModal(WIDTH, HEIGHT, property, background, hasBtn);
             }
             // Electricity Company and Water Works
             else if (id == 12 || id == 27) {
@@ -723,9 +830,9 @@ public class GameView {
                         modalImages[id].getScaledInstance((int) WIDTH,
                                 (int) HEIGHT, Image.SCALE_SMOOTH));
 
-                Object[] btnOptions = { "Mortgage" };
+                boolean hasBtn = false;
 
-                showUtilityModal(WIDTH, HEIGHT, property, background, btnOptions);
+                showUtilityModal(WIDTH, HEIGHT, property, background, hasBtn);
             }
             // Properties
             else {
@@ -736,11 +843,9 @@ public class GameView {
                         modalImages[id].getScaledInstance((int) WIDTH,
                                 (int) HEIGHT, Image.SCALE_SMOOTH));
 
-                Object[] btnOptions = { "Buy House",
-                        "Sell House",
-                        "Mortgage" };
+                boolean hasBtn = true;
 
-                showPropertyModal(WIDTH, HEIGHT, property, background, btnOptions);
+                showPropertyModal(WIDTH, HEIGHT, property, background, hasBtn, id);
 
             }
         } catch (RemoteException e) {
@@ -749,8 +854,9 @@ public class GameView {
     }
 
     // Creates actual modal object
-    private void showPropertyModal(int WIDTH, int HEIGHT, Property property, ImageIcon background,
-            Object[] btnOptions) {
+    private void showPropertyModal(int WIDTH, int HEIGHT, Property property, ImageIcon background, boolean hasBtns,
+            int propertyId)
+            throws RemoteException {
 
         // Variables
         String title = property.getName();
@@ -838,6 +944,38 @@ public class GameView {
         JLabel hotelCostTextLbl = new JLabel(hotelsCostTextValue, SwingConstants.CENTER);
         hotelCostTextLbl.setBounds(0, 240, WIDTH, 30);
 
+        if (hasBtns) {
+
+            // If player owns property
+            if (client.getPlayerService().checkIfPlayerOwns(propertyId, client.getClientId())) {
+
+                JButton buyHouseBtn = new JButton("Buy House");
+                buyHouseBtn.setBounds(10, 265, 100, 20);
+
+                JButton sellHouseBtn = new JButton("Sell House");
+                sellHouseBtn.setBounds(WIDTH - 110, 265, 100, 20);
+
+                JButton mortgageBtn = new JButton("Mortgage");
+                mortgageBtn.setBounds(WIDTH / 2 - 50, 290, 100, 20);
+
+                // Check if its their turn
+                if (client.getClientId() == client.getPlayerService().getTurn()) {
+                    buyHouseBtn.setEnabled(true);
+                    sellHouseBtn.setEnabled(true);
+                    mortgageBtn.setEnabled(true);
+                } else {
+                    buyHouseBtn.setEnabled(false);
+                    sellHouseBtn.setEnabled(false);
+                    mortgageBtn.setEnabled(false);
+                }
+
+                // Adds components
+                backgroundLbl.add(buyHouseBtn);
+                backgroundLbl.add(sellHouseBtn);
+                backgroundLbl.add(mortgageBtn);
+            }
+        }
+
         // Adds components
         backgroundLbl.add(titleLbl);
         backgroundLbl.add(rentTier0Lbl);
@@ -863,9 +1001,7 @@ public class GameView {
     }
 
     // Creates actual modal object
-    private void showTrainModal(int WIDTH, int HEIGHT, Property property, ImageIcon background,
-
-            Object[] btnOptions) {
+    private void showTrainModal(int WIDTH, int HEIGHT, Property property, ImageIcon background, boolean hasBtns) {
 
         // Variables
         String title = property.getName();
@@ -953,8 +1089,7 @@ public class GameView {
     }
 
     // Creates actual modal object
-    private void showUtilityModal(int WIDTH, int HEIGHT, Property property, ImageIcon background,
-            Object[] btnOptions) {
+    private void showUtilityModal(int WIDTH, int HEIGHT, Property property, ImageIcon background, boolean hasBtns) {
 
         // Variables
         String title = property.getName();
@@ -1014,8 +1149,8 @@ public class GameView {
     }
 
     // Creates actual modal object
-    private void showNonPropertyModal(int WIDTH, int HEIGHT, Property property, ImageIcon background,
-            Object[] btnOptions) {
+    private void showNonPropertyModal(int WIDTH, int HEIGHT, Property property, ImageIcon background, boolean hasBtns)
+            throws RemoteException {
         // Variables
 
         String title = property.getName();
@@ -1049,10 +1184,17 @@ public class GameView {
         backgroundLbl.setBounds(0, 0, WIDTH, HEIGHT);
 
         // Button
-        if (btnOptions != null) {
+        if (hasBtns) {
             JButton cardBtn = new JButton();
-            cardBtn.setText(btnOptions[0].toString());
+            cardBtn.setText("Select Card");
             cardBtn.setBounds(WIDTH / 2 - 50, 270, 100, 30);
+
+            // Check if its their turn
+            if (client.getClientId() == client.getPlayerService().getTurn()) {
+                cardBtn.setEnabled(true);
+            } else {
+                cardBtn.setEnabled(false);
+            }
 
             // Adds components
             backgroundLbl.add(cardBtn);
