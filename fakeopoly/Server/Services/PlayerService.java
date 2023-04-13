@@ -65,6 +65,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         Player player = new Player(name, color);
         players.add(player);
         int id = players.indexOf(player);
+        player.setId(id);
         return id;
     }
 
@@ -137,7 +138,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                     sum = dice1 + dice2;
                     // last execution
                 }
-                updatePlayerLocation(sum, id);
+                updatePlayerLocation(dice1, dice2, sum, id);
                 players.get(id).setLastRoll(sum);
             }
         });
@@ -350,14 +351,6 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         }
     }
 
-    private void updatePlayerLocation(int diceSum, int id) {
-        // Update Server Player object
-        int currentLocation = players.get(id).getLocation();
-        int newLocation = currentLocation + diceSum;
-        if (newLocation > 39)
-            newLocation -= 40;
-        players.get(id).setLocation(newLocation);
-
     public void updatePlayerDetails() {
         for (int x = 0; x < totalPlayers; x++) {
             try {
@@ -366,6 +359,23 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                 System.out.print(e);
             }
         }
+    }
+
+    @Override
+    public void setPlayerMoney(int id, int value) throws RemoteException {
+        players.get(id).setMoney(players.get(id).getMoney() - value);
+    }
+
+    @Override
+    public void setPropertyOwner(int propertyId, int id) throws RemoteException {
+        properties.get(propertyId).setOwner(players.get(id));
+    }
+
+    @Override
+    public boolean checkIfPlayerOwns(int propertyId, int id) throws RemoteException {
+        if (properties.get(propertyId).getOwner() == players.get(id))
+            return true;
+        return false;
     }
 
 }

@@ -51,4 +51,10 @@ public interface PlayerServiceIF extends Remote {
 
     public String getMessages() throws RemoteException;
 
+    public void setPlayerMoney(int id, int value) throws RemoteException;
+
+    public void setPropertyOwner(int propertyId, int id) throws RemoteException;
+
+    public boolean checkIfPlayerOwns(int propertyId, int id) throws RemoteException;
+
 }

@@ -15,6 +15,7 @@ import Shared.Interfaces.ClientServiceIF;
  */
 public class Player implements Serializable {
 
+    private int id;
     private String name;
     private Color color;
     private int money;
@@ -49,6 +50,14 @@ public class Player implements Serializable {
             isSuccess = false;
         }
         return isSuccess;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public boolean getJail() {
