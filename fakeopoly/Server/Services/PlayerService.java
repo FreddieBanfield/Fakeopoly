@@ -138,6 +138,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
                     sum = dice1 + dice2;
                 }
                 updatePlayerLocation(sum, id);
+                players.get(id).setLastRoll(sum);
             }
         });
         thread.start();

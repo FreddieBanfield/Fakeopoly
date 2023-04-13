@@ -22,6 +22,7 @@ public class Player implements Serializable {
     private ClientServiceIF _clientService;
     private boolean isReady;
     private int location;
+    private int lastRoll;
 
     // constructor
     public Player(String name, Color color) {
@@ -81,6 +82,14 @@ public class Player implements Serializable {
 
     public void setIsReady(Boolean isReady) {
         this.isReady = isReady;
+    }
+
+    public int getLastRoll() {
+        return lastRoll;
+    }
+
+    public void setLastRoll(int lastRoll) {
+        this.lastRoll = lastRoll;
     }
 
 }
