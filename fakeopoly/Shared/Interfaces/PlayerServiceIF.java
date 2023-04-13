@@ -58,6 +58,6 @@ public interface PlayerServiceIF extends Remote {
 
     public void setPropertyOwner(int propertyId, int id) throws RemoteException;
 
-
+    public boolean checkIfPlayerOwns(int propertyId, int id) throws RemoteException;
 
 }
