@@ -24,6 +24,10 @@ public class Player implements Serializable {
     private int location;
     private int lastRoll;
 
+    private boolean inJail = false;
+    private int doubles = 0;
+    private int jailCount = 0;
+
     // constructor
     public Player(String name, Color color) {
         this.name = name;
@@ -45,6 +49,27 @@ public class Player implements Serializable {
             isSuccess = false;
         }
         return isSuccess;
+    }
+
+    public boolean getJail() {
+        return inJail;
+    }
+
+    public void setJail(boolean jail) {
+        inJail = jail;
+    }
+
+    public int increaseDoubles() {
+        doubles++;
+        return doubles;
+    }
+
+    public int getDoubles() {
+        return doubles;
+    }
+
+    public void setDoubles(int x) {
+        doubles = x;
     }
 
     // getters and setters
@@ -76,6 +101,10 @@ public class Player implements Serializable {
         this.location = location;
     }
 
+    public void increaseMoney(int money) {
+        this.money += money;
+    }
+
     public Boolean getIsReady() {
         return isReady;
     }
@@ -92,4 +121,12 @@ public class Player implements Serializable {
         this.lastRoll = lastRoll;
     }
 
+    public int increaseJailCount() {
+        jailCount++;
+        return jailCount;
+    }
+
+    public void setJailCount(int count) {
+        jailCount = count;
+    }
 }
