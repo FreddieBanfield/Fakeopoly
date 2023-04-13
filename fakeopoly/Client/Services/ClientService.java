@@ -54,8 +54,22 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
     public void updatePlayerLocation(int newLocation, int id) throws RemoteException {
         gameClient.getGameView().movePlayerAnimation(newLocation, id);
     }
+
+    //wipes last dice roll
     @Override
-    public void wipe(){
+    public void wipe() throws RemoteException{
         gameClient.getGameView().wipe();
+    }
+    @Override 
+    public void updatePlayerDetails() throws RemoteException{
+        gameClient.getGameView().updatePlayerDetails();
+    }
+
+    public void doubles(){
+        gameClient.getGameView().enableTurn();
+    }
+    @Override
+    public void enableTurnEnd() throws RemoteException{
+        gameClient.getGameView().enableEndturn();
     }
 }

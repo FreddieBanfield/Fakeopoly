@@ -23,5 +23,14 @@ public interface ClientServiceIF extends Remote {
 
     public void updatePlayerLocation(int newLocation, int id) throws RemoteException;
 
+    //clear last dice roll
     public void wipe() throws RemoteException;
+
+    public void updatePlayerDetails() throws RemoteException;
+
+    //if they roll doubles
+    public void doubles() throws RemoteException;
+
+    //allows user to end their turn
+    public void enableTurnEnd() throws RemoteException;
 }
