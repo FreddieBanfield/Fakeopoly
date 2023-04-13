@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -70,13 +71,6 @@ public class GameView {
     private JPanel boardPanel;
     private JPanel mainPanel;
     private int diceSize = 40;
-
-    private enum BtnLayout {
-        NONE,
-        VIEWING,
-        OWN,
-        PURCHASING
-    }
 
     private JLabel[] playerIcons;
 
@@ -236,12 +230,67 @@ public class GameView {
         Property currentProperty;
         try {
             currentProperty = client.getPlayerService().getPropertyById(propertyId);
-            if (currentProperty.getOwner() == null && currentProperty.getPrice() != 0) {
-                purchaseProperty(currentProperty, propertyId);
-            } else if (currentProperty.getPrice() != 0) {
+            // if not owned and is a purchasable property
+            if (currentProperty.getOwner() == null && !currentProperty.getColor().equals("None")) {
+                purchaseProperty(currentProperty, propertyId, id);
+            }
+            // if it is owned and a purchasable property PAY RENT
+            else if (!currentProperty.getColor().equals("None") && !currentProperty.getColor().equals("Tax")
+                    && !currentProperty.getColor().equals("Utility")) {
                 // Charges player rent
                 Player currentPlayer = client.getPlayerService().getPlayerById(id);
-                currentPlayer.setMoney(currentPlayer.getMoney() - currentProperty.getTierZeroValue());
+                int tier = currentProperty.getTier();
+                int rentCost = 0;
+                // Get rent cost
+                switch (tier) {
+                    case 0:
+                        rentCost = currentProperty.getTierZeroValue();
+                        break;
+                    case 1:
+                        rentCost = currentProperty.getTierOneValue();
+                        break;
+                    case 2:
+                        rentCost = currentProperty.getTierTwoValue();
+                        break;
+                    case 3:
+                        rentCost = currentProperty.getTierThreeValue();
+                        break;
+                    case 4:
+                        rentCost = currentProperty.getTierFourValue();
+                        break;
+                    case 5:
+                        rentCost = currentProperty.getTierFiveValue();
+                        break;
+                }
+                // take from paying player
+                currentPlayer.setMoney(currentPlayer.getMoney() - rentCost);
+                // Give to receiving player
+                currentProperty.getOwner().setMoney(currentProperty.getOwner().getMoney() + rentCost);
+            }
+            // Utility Billing
+            else if (currentProperty.getColor().equals("Utility")) {
+                // Charges player rent
+                Player currentPlayer = client.getPlayerService().getPlayerById(id);
+                // Get rent cost
+                int rentCost;
+                if (currentProperty.getTier() == 1)
+                    rentCost = 10 * currentPlayer.getLastRoll();
+                else
+                    rentCost = 4 * currentPlayer.getLastRoll();
+
+                // take from paying player
+                currentPlayer.setMoney(currentPlayer.getMoney() - rentCost);
+                // Give to receiving player
+                currentProperty.getOwner().setMoney(currentProperty.getOwner().getMoney() + rentCost);
+            } // Tax
+            else if (currentProperty.getColor().equals("Tax")) {
+                // Charges player rent
+                Player currentPlayer = client.getPlayerService().getPlayerById(id);
+                // Get rent cost
+                int rentCost = currentProperty.getTierZeroValue();
+
+                // take from paying player
+                currentPlayer.setMoney(currentPlayer.getMoney() - rentCost);
             }
         } catch (RemoteException e) {
             System.out.println(e);
@@ -419,9 +468,23 @@ public class GameView {
     }
 
     // Allows user to purchase property via modal
-    public void purchaseProperty(Property currentProperty, int propertyId) {
+    public void purchaseProperty(Property currentProperty, int propertyId, int id) {
         try {
-            currentProperty.setOwner(client.getPlayerService().getPlayerById(client.getClientId()));
+            int result = JOptionPane.showConfirmDialog(frame,
+                    "Would you like to purchase " + currentProperty.getName() + " for $" + currentProperty.getPrice());
+            if (result == 0) {
+                Player currentPlayer = client.getPlayerService().getPlayerById(id);
+                int newBalance = currentPlayer.getMoney() - currentProperty.getPrice();
+                // If player can afford
+                if (newBalance >= 0) {
+                    currentProperty.setOwner(client.getPlayerService().getPlayerById(client.getClientId()));
+                    currentPlayer.setMoney(currentPlayer.getMoney() - currentProperty.getPrice());
+                } else {
+                    JOptionPane.showMessageDialog(frame, "You are unable to afford the property!", "Insufficient Funds",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
         } catch (RemoteException e) {
             System.out.println(e);
         }
