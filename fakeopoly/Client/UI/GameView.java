@@ -162,7 +162,6 @@ public class GameView {
         frame.setContentPane(mainPanel);
         frame.setVisible(true);
     }
-
     private void createPlayerIcon(int id, int propertyId) {
         try {
             Color colour = client.getPlayerService().getColorById(id);
@@ -227,6 +226,11 @@ public class GameView {
         // chatArea.setBounds(25,300,400,250);
         chatArea.setEditable(false);
         chatArea.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+        try {
+            chatArea.setText(client.getPlayerService().getMessages());
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
 
         messageBoard.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         messageBoard.setBounds(10, 350, 400, 200);
@@ -243,6 +247,8 @@ public class GameView {
                 sendMessageAction();
             }
         });
+
+
     }
 
     public void sendMessageAction() {
@@ -348,8 +354,8 @@ public class GameView {
         endTurn.setBounds(x + offset, frameHeight - 90, 300, 40);
         try {
             if (client.getPlayerService().getTurn() == client.getClientId()) {
-                endTurn.setEnabled(true);
                 rollDice.setEnabled(true);
+                endTurn.setEnabled(false);
             } else {
                 endTurn.setEnabled(false);
                 rollDice.setEnabled(false);
@@ -362,13 +368,15 @@ public class GameView {
         manageProperties.setBounds(x + offset, frameHeight - 180, 300, 40);
 
     }
-
-    public void enableTurn() {
-        rollDice.setEnabled(true);
-        endTurn.setEnabled(true);
+    public void updatePlayerDetails(){
         for (int i = 0; i < playerDetails.length; i++) {
             playerDetails[i].setText(setPlayerDetailsString(i));
         }
+    }
+    public void enableTurn() {
+        rollDice.setEnabled(true);
+        endTurn.setEnabled(false);
+        updatePlayerDetails();
     }
 
     public void disableTurn() {
@@ -380,7 +388,9 @@ public class GameView {
             playerDetails[i].setText(setPlayerDetailsString(i));
         }
     }
-
+    public void enableEndturn(){
+        endTurn.setEnabled(true);
+    }
 
     // Gets random number for both dice and updates clients
     private void performDiceRoll() {
