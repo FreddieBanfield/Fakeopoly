@@ -232,7 +232,7 @@ public class GameView {
         try {
             currentProperty = client.getPlayerService().getPropertyById(propertyId);
             // Utility Billing
-            if (currentProperty.getColor().equals("Utility")) {
+            if (currentProperty.getColor().equals("Utility") && currentProperty.getOwner() != null) {
                 // Charges player rent
                 Player currentPlayer = client.getPlayerService().getPlayerById(id);
                 // Get rent cost
@@ -255,7 +255,7 @@ public class GameView {
                 client.getPlayerService().setPlayerMoney(id, rentCost);
             }
             // if it is owned and a purchasable property PAY RENT
-            if (currentProperty.getOwner() != null && !currentProperty.getColor().equals("None")) {
+            else if (currentProperty.getOwner() != null && !currentProperty.getColor().equals("None")) {
                 // Charges player rent
                 int tier = currentProperty.getTier();
                 int rentCost = 0;
