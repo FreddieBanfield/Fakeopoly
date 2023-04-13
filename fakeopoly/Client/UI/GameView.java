@@ -309,13 +309,38 @@ public class GameView {
                 playerDetails[i] = new JLabel(setPlayerDetailsString(i));
                 // playerDetails[i].setForeground(colour);
                 playerDetails[i].setBounds(startingX, startingY + (yOffset * i), width, height);
+                setOwnedProperties();
             } catch (Exception e) {
                 System.out.println(e);
             }
 
         }
     }
+    public void setOwnedProperties(){
+        int startingX = 370 / 10;
+        int startingY = frameHeight - 750;
+        int width = 400;
+        int height = 60;
+        int yOffset = height + 10;
 
+        ArrayList<Property> properties = null;
+        try {
+             properties = client.getPlayerService().getProperties();
+        } catch (Exception error) {
+            System.out.println(error);
+        }
+
+        for(int i = 0; i < imagesNum; i++){
+            if(!properties.get(i).getColor().equals("None")){
+                JLabel prop = new JLabel();
+                prop.setIcon(null);
+                prop.setText("" + i);
+                prop.setBounds(startingX, startingY + (yOffset * i), width, height);
+                //prop.setBackground();
+            }
+        }
+        
+    }
     public String setPlayerDetailsString(int id) {
         try {
             int money = client.getPlayerService().getMoneyById(id);
@@ -579,11 +604,12 @@ public class GameView {
 
             if(properties.get(i).getOwner() != null){
                 try{
-                    boardTiles[i].setBorder(BorderFactory.createLineBorder(client.getPlayerService().getColorById(client.getClientId()), 2));
+                    boardTiles[i].setBorder(BorderFactory.createLineBorder(client.getPlayerService().getColorById(client.getClientId()), 1));
                 }catch (Exception error) {
                     System.out.println(error);
                 }
             }
+
             if (i < 10) {
                 if (i == 0){
                     boardTiles[i].setBounds(starting_x, starting_y, wide_w, wide_h);
