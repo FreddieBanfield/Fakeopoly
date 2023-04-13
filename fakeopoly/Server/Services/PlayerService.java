@@ -162,7 +162,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
             //dont let player move and check if they can get out
             int count = players.get(id).increaseJailCount();
             if(count == 3){
-                //pay and leave
+                players.get(id).setMoney(players.get(id).getMoney() - 50);
                 movePlayerIcon(newLocation, id);
                 players.get(id).setLocation(newLocation);
                 players.get(id).setJailCount(0);
@@ -263,7 +263,10 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     public void deletePlayer(int id) throws RemoteException {
         players.set(id, null);
     }
-
+    @Override
+    public ArrayList<Property> getProperties(){
+        return properties;
+    }
     @Override
     public void addMessage(Message message) throws RemoteException {
         messages.add(message);

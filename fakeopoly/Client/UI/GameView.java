@@ -41,6 +41,7 @@ import Client.GameClient;
 import Shared.Objects.Message;
 import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
+import javafx.scene.layout.Border;
 
 public class GameView {
     //private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
@@ -568,13 +569,27 @@ public class GameView {
         int wide_h = (int) (boardImages[0].getHeight() / imageScale);
         int slim_w = (int) (boardImages[1].getWidth() / imageScale);
         int slim_h = (int) (boardImages[0].getHeight() / imageScale);
-
+        ArrayList<Property> properties = null;
+        try {
+             properties = client.getPlayerService().getProperties();
+        } catch (Exception error) {
+            System.out.println(error);
+        }
         for (int i = 0; i < imagesNum; i++) {
+
+            if(properties.get(i).getOwner() != null){
+                try{
+                    boardTiles[i].setBorder(BorderFactory.createLineBorder(client.getPlayerService().getColorById(client.getClientId()), 2));
+                }catch (Exception error) {
+                    System.out.println(error);
+                }
+            }
             if (i < 10) {
-                if (i == 0)
+                if (i == 0){
                     boardTiles[i].setBounds(starting_x, starting_y, wide_w, wide_h);
-                else
+                }else{
                     boardTiles[i].setBounds(starting_x - i * slim_w, starting_y, slim_w, slim_h);
+                }
             } else if (i < 20) {
                 if (i == 10)
                     boardTiles[i].setBounds(starting_x - 9 * slim_w - wide_w, starting_y, wide_w, wide_h);

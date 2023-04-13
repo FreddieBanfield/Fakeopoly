@@ -3,6 +3,7 @@ package Shared.Interfaces;
 import java.awt.Color;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import Shared.Objects.Message;
 import Shared.Objects.Property;
@@ -47,5 +48,7 @@ public interface PlayerServiceIF extends Remote {
     public void displayDiceRoll(int id) throws RemoteException;
 
     public String getMessages() throws RemoteException;
+
+    public ArrayList<Property> getProperties() throws RemoteException;
 
 }
