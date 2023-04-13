@@ -39,7 +39,6 @@ import Shared.Objects.Message;
 import Shared.Objects.Player;
 import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
-import javafx.scene.layout.Border;
 
 public class GameView {
     private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
@@ -389,7 +388,8 @@ public class GameView {
 
         }
     }
-    public void setOwnedProperties(){
+
+    public void setOwnedProperties() {
         int startingX = 370 / 10;
         int startingY = frameHeight - 750;
         int width = 400;
@@ -398,22 +398,23 @@ public class GameView {
 
         ArrayList<Property> properties = null;
         try {
-             properties = client.getPlayerService().getProperties();
+            properties = client.getPlayerService().getProperties();
         } catch (Exception error) {
             System.out.println(error);
         }
 
-        for(int i = 0; i < imagesNum; i++){
-            if(!properties.get(i).getColor().equals("None")){
+        for (int i = 0; i < imagesNum; i++) {
+            if (!properties.get(i).getColor().equals("None")) {
                 JLabel prop = new JLabel();
                 prop.setIcon(null);
                 prop.setText("" + i);
                 prop.setBounds(startingX, startingY + (yOffset * i), width, height);
-                //prop.setBackground();
+                // prop.setBackground();
             }
         }
-        
+
     }
+
     public String setPlayerDetailsString(int id) {
         try {
             int money = client.getPlayerService().getMoneyById(id);
@@ -702,24 +703,25 @@ public class GameView {
         int slim_h = (int) (boardImages[0].getHeight() / imageScale);
         ArrayList<Property> properties = null;
         try {
-             properties = client.getPlayerService().getProperties();
+            properties = client.getPlayerService().getProperties();
         } catch (Exception error) {
             System.out.println(error);
         }
         for (int i = 0; i < imagesNum; i++) {
 
-            if(properties.get(i).getOwner() != null){
-                try{
-                    boardTiles[i].setBorder(BorderFactory.createLineBorder(client.getPlayerService().getColorById(client.getClientId()), 1));
-                }catch (Exception error) {
+            if (properties.get(i).getOwner() != null) {
+                try {
+                    boardTiles[i].setBorder(BorderFactory
+                            .createLineBorder(client.getPlayerService().getColorById(client.getClientId()), 1));
+                } catch (Exception error) {
                     System.out.println(error);
                 }
             }
 
             if (i < 10) {
-                if (i == 0){
+                if (i == 0) {
                     boardTiles[i].setBounds(starting_x, starting_y, wide_w, wide_h);
-                }else{
+                } else {
                     boardTiles[i].setBounds(starting_x - i * slim_w, starting_y, slim_w, slim_h);
                 }
             } else if (i < 20) {
