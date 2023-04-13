@@ -37,7 +37,7 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
     }
 
     @Override
-    public void nextTurn(int turn) {
+    public void nextTurn(int turn) throws RemoteException {
         if (turn == gameClient.getClientId()) {
             gameClient.getGameView().enableTurn();
         } else {
@@ -55,21 +55,23 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
         gameClient.getGameView().movePlayerAnimation(newLocation, id);
     }
 
-    //wipes last dice roll
+    // wipes last dice roll
     @Override
-    public void wipe() throws RemoteException{
+    public void wipe() throws RemoteException {
         gameClient.getGameView().wipe();
     }
-    @Override 
-    public void updatePlayerDetails() throws RemoteException{
+
+    @Override
+    public void updatePlayerDetails() throws RemoteException {
         gameClient.getGameView().updatePlayerDetails();
     }
 
-    public void doubles(){
+    public void doubles() {
         gameClient.getGameView().enableTurn();
     }
+
     @Override
-    public void enableTurnEnd() throws RemoteException{
+    public void enableTurnEnd() throws RemoteException {
         gameClient.getGameView().enableEndturn();
     }
 }

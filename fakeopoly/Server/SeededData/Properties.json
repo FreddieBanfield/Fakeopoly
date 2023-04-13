@@ -61,7 +61,7 @@
     },
     {
         "name" : "Income Tax",
-        "color" : "None",
+        "color" : "Tax",
         "price" : 0,
         "tier" : 0,
         "pricePerHouse" : 0,
@@ -76,7 +76,7 @@
     },
     {
         "name" : "Kings Cross",
-        "color" : "None",
+        "color" : "Train",
         "price" : 200,
         "tier" : 0,
         "pricePerHouse" : 0,
@@ -181,7 +181,7 @@
     },
     {
         "name" : "Electricity Company",
-        "color" : "None",
+        "color" : "Utility",
         "price" : 150,
         "tier" : 0,
         "pricePerHouse" : 0,
@@ -226,7 +226,7 @@
     },
     {
         "name" : "Marylebone",
-        "color" : "None",
+        "color" : "Train",
         "price" : 200,
         "tier" : 0,
         "pricePerHouse" : 0,
@@ -376,7 +376,7 @@
     },
     {
         "name" : "Fenchurch St",
-        "color" : "None",
+        "color" : "Train",
         "price" : 200,
         "tier" : 0,
         "pricePerHouse" : 0,
@@ -406,7 +406,7 @@
     },
     {
         "name" : "Water Works",
-        "color" : "None",
+        "color" : "Utility",
         "price" : 150,
         "tier" : 0,
         "pricePerHouse" : 0,
@@ -526,7 +526,7 @@
     },
     {
         "name" : "Liverpool St",
-        "color" : "None",
+        "color" : "Train",
         "price" : 200,
         "tier" : 0,
         "pricePerHouse" : 0,
@@ -571,7 +571,7 @@
     },
     {
         "name" : "Luxury Tax",
-        "color" : "None",
+        "color" : "Tax",
         "price" : 0,
         "tier" : 0,
         "pricePerHouse" : 0,
