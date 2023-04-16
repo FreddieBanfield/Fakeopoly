@@ -62,7 +62,7 @@ public class GameView {
     private BufferedImage modalImages[];
     private ImageIcon boardImagesScaled[];
     private JLabel boardTiles[];
-    private JLabel ownedPropertyTiles[];
+    private JLabel ownedPropertyTiles[][];
     private JButton rollDice;
     private JButton endTurn;
     private JTextArea chatArea;
@@ -93,7 +93,7 @@ public class GameView {
         boardImages = new BufferedImage[imagesNum];
         boardImagesScaled = new ImageIcon[imagesNum];
         boardTiles = new JLabel[imagesNum];
-        ownedPropertyTiles = new JLabel[imagesNum];
+        ownedPropertyTiles = new JLabel[4][imagesNum];
         diceImages = new BufferedImage[6];
         diceTile = new JLabel[2];
         playerDetails = new JLabel[2];
@@ -137,6 +137,7 @@ public class GameView {
         setControlPanelButtons();
         setControlPanelChat();
         setControlPanelPlayerDetails();
+        displayOwnedProperties();
         for (int i = 0; i < playerIcons.length; i++) {
             createPlayerIcon(i, 0);
         }
@@ -388,7 +389,6 @@ public class GameView {
                 playerDetails[i] = new JLabel(setPlayerDetailsString(i));
                 // playerDetails[i].setForeground(colour);
                 playerDetails[i].setBounds(startingX, startingY + (yOffset * i), width, height);
-                displayOwnedProperties();
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -403,15 +403,7 @@ public class GameView {
         int width = 20;
         int height = 10;
         int yOffset = height + 60;
-        int xOffset = 0;
 
-        // get the list of properties
-        ArrayList<Property> properties = null;
-        try {
-            properties = client.getPlayerService().getProperties();
-        } catch (Exception error) {
-            System.out.println(error);
-        }
         try {
 
             for (int x = 0; x < client.getPlayerService().getTotalPlayers(); x++) {
@@ -420,267 +412,274 @@ public class GameView {
                 int tileNum = 0;
                 // ------------- BROWNS ----------------
                 // Brown 1
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 1;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
+
                 propNum++;
                 // Brown 2
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 3;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
                 // ------------- LIGHT BLUES ----------------
                 setNum++;
                 propNum = 0;
                 // LightBlue 1
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 6;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // LightBlue 2
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 8;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // LightBlue 3
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 9;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
                 // ------------- PINK ----------------
                 setNum++;
                 propNum = 0;
                 // PINK 1
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 11;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // PINK 2
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 13;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // PINK 3
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 14;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
                 // ------------- ORANGE ----------------
                 setNum++;
                 propNum = 0;
                 // ORANGE 1
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 16;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // ORANGE 2
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 18;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // ORANGE 3
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 19;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
                 // ------------- RED ----------------
                 setNum++;
                 propNum = 0;
                 // RED 1
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 21;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // RED 2
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 23;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // RED 3
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 24;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
                 // ------------- YELLOW ----------------
                 setNum++;
                 propNum = 0;
                 // YELLOW 1
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 26;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // YELLOW 2
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 27;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // YELLOW 3
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 29;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
                 // ------------- GREEN ----------------
                 setNum++;
                 propNum = 0;
                 // GREEN 1
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 31;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // GREEN 2
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 32;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // GREEN 3
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 34;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
                 // ------------- DARK BLUE ----------------
                 setNum++;
                 propNum = 0;
                 // DARK BLUE 1
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 37;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // DARK BLUE 2
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 39;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
-                propNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
                 // ------------- TRAINS ----------------
                 setNum++;
                 propNum = 0;
                 // TRAIN 1
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 5;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // TRAIN 2
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 15;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // TRAIN 3
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 25;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // TRAIN 4
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 35;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
                 // ------------- UTILITY ----------------
                 setNum++;
                 propNum = 0;
                 // Electricity Company
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 12;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width, height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
                 propNum++;
                 // Water Works
-                ownedPropertyTiles[tileNum] = new JLabel(new ImageIcon(
+                tileNum = 28;
+                ownedPropertyTiles[x][tileNum] = new JLabel(new ImageIcon(
                         ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH)));
-                ownedPropertyTiles[tileNum].setBounds(startingX + (width * setNum),
+                ownedPropertyTiles[x][tileNum].setBounds(startingX + (width * setNum),
                         startingY + (yOffset * x) + ((height + 1) * propNum), width,
                         height);
-                controlsPanel.add(ownedPropertyTiles[tileNum]);
-                tileNum++;
-                propNum++;
+                controlsPanel.add(ownedPropertyTiles[x][tileNum]);
 
             }
 
@@ -756,7 +755,6 @@ public class GameView {
         rollDice.setEnabled(true);
         endTurn.setEnabled(false);
         updatePlayerDetails();
-        displayOwnedProperties();
         // createBoard();
     }
 
@@ -768,7 +766,6 @@ public class GameView {
         for (int i = 0; i < playerDetails.length; i++) {
             playerDetails[i].setText(setPlayerDetailsString(i));
         }
-        displayOwnedProperties();
         // createBoard();
     }
 
@@ -801,6 +798,7 @@ public class GameView {
                 if (newBalance >= 0) {
                     client.getPlayerService().setPropertyOwner(propertyId, id);
                     client.getPlayerService().setPlayerMoney(id, currentProperty.getPrice());
+                    client.getPlayerService().setOwnedPropertyImage(id, propertyId, currentProperty.getColor());
                 } else {
                     JOptionPane.showMessageDialog(frame, "You are unable to afford the property!", "Insufficient Funds",
                             JOptionPane.WARNING_MESSAGE);
@@ -810,7 +808,66 @@ public class GameView {
         } catch (RemoteException e) {
             System.out.println(e);
         }
-        System.out.println(currentProperty.getOwner());
+    }
+
+    // Set property image if owned
+    public void setOwnedPropertyImage(int playerId, int propertyId, String propertyColor) {
+        ImageIcon ownedImage;
+        int width = 20;
+        int height = 10;
+        // Get image
+        switch (propertyColor) {
+            case "Brown":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[1].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            case "LightBlue":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[2].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            case "Pink":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[3].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            case "Orange":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[4].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            case "Red":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[5].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            case "Yellow":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[6].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            case "Green":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[7].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            case "DarkBlue":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[8].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            case "Train":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[11].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            case "Utility":
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[9].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                break;
+            default:
+                ownedImage = new ImageIcon(
+                        ownedPropertyImages[0].getScaledInstance(width, height, Image.SCALE_SMOOTH));
+        }
+        ownedPropertyTiles[playerId][propertyId].setIcon(null);
+        ownedPropertyTiles[playerId][propertyId].setIcon(ownedImage);
+        ownedPropertyTiles[playerId][propertyId].repaint();
+        ownedPropertyTiles[playerId][propertyId].revalidate();
+        controlsPanel.repaint();
+        controlsPanel.revalidate();
+
     }
 
     // Gets images of dice from files
@@ -951,6 +1008,7 @@ public class GameView {
             modalImages[37] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_DarkBlue.png"));
             modalImages[38] = ImageIO.read(new File(MODALPATH + "monopoly_board_LuxuryTax.jpg"));
             modalImages[39] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_DarkBlue.png"));
+
             ownedPropertyImages[0] = ImageIO.read(new File(OWNEDPATH + "monopoly_board_Buildings_NotOwned_top.png"));
             ownedPropertyImages[1] = ImageIO.read(new File(OWNEDPATH + "monopoly_board_Buildings_Brown_top.png"));
             ownedPropertyImages[2] = ImageIO.read(new File(OWNEDPATH + "monopoly_board_Buildings_LightBlue_top.png"));
@@ -963,6 +1021,7 @@ public class GameView {
             ownedPropertyImages[9] = ImageIO
                     .read(new File(OWNEDPATH + "monopoly_board_Buildings_ElectricityCompany_top.png"));
             ownedPropertyImages[10] = ImageIO.read(new File(OWNEDPATH + "monopoly_board_Buildings_WaterWorks_top.png"));
+            ownedPropertyImages[11] = ImageIO.read(new File(OWNEDPATH + "monopoly_board_Buildings_Train_top.png"));
         } catch (IOException e) {
             System.out.println(e);
         }

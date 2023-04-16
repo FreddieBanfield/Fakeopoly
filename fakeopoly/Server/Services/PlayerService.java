@@ -168,7 +168,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         } else if (players.get(id).getJail()) {
             // dont let player move and check if they can get out
             int count = players.get(id).increaseJailCount();
-            if(count == 3){
+            if (count == 3) {
                 players.get(id).setMoney(players.get(id).getMoney() - 50);
 
                 movePlayerIcon(newLocation, id);
@@ -275,10 +275,12 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     public void deletePlayer(int id) throws RemoteException {
         players.set(id, null);
     }
+
     @Override
-    public ArrayList<Property> getProperties(){
+    public ArrayList<Property> getProperties() {
         return properties;
     }
+
     @Override
     public void addMessage(Message message) throws RemoteException {
         messages.add(message);
@@ -380,6 +382,17 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         if (properties.get(propertyId).getOwner() == players.get(id))
             return true;
         return false;
+    }
+
+    @Override
+    public void setOwnedPropertyImage(int id, int propertyId, String propertyColor) {
+        for (int x = 0; x < totalPlayers; x++) {
+            try {
+                players.get(x).getClient().setOwnedPropertyImage(id, propertyId, propertyColor);
+            } catch (Exception e) {
+                System.out.print(e);
+            }
+        }
     }
 
 }
