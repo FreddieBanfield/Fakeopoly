@@ -54,6 +54,7 @@ public class GameView {
     private int frameHeight;
     private GameClient client;
     private BufferedImage boardImages[];
+    private BufferedImage ownedPropertyImages[];
     private BufferedImage diceImages[];
     private BufferedImage modalImages[];
     private ImageIcon boardImagesScaled[];
@@ -84,6 +85,7 @@ public class GameView {
         frameHeight = height + 170;
         this.client = client;
         modalImages = new BufferedImage[imagesNum];
+        ownedPropertyImages = new BufferedImage[imagesNum];
         boardImages = new BufferedImage[imagesNum];
         boardImagesScaled = new ImageIcon[imagesNum];
         boardTiles = new JLabel[imagesNum];
@@ -693,6 +695,19 @@ public class GameView {
             modalImages[37] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_DarkBlue.png"));
             modalImages[38] = ImageIO.read(new File(MODALPATH + "monopoly_board_LuxuryTax.jpg"));
             modalImages[39] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_DarkBlue.png"));
+
+            ownedPropertyImages[0] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_NotOwned_top.png"));
+            ownedPropertyImages[1] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Brown_top.png"));
+            ownedPropertyImages[2] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_LightBlue_top.png"));
+            ownedPropertyImages[3] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Pink_top.png"));
+            ownedPropertyImages[4] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Orange_top.png"));
+            ownedPropertyImages[5] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Red_top.png"));
+            ownedPropertyImages[6] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Yellow_top.png"));
+            ownedPropertyImages[7] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_Green_top.png"));
+            ownedPropertyImages[8] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_DarkBlue_top.png"));
+            ownedPropertyImages[9] = ImageIO
+                    .read(new File(MODALPATH + "monopoly_board_Buildings_ElectricityCompany_top.png"));
+            ownedPropertyImages[10] = ImageIO.read(new File(MODALPATH + "monopoly_board_Buildings_WaterWorks_top.png"));
         } catch (IOException e) {
             System.out.println(e);
         }

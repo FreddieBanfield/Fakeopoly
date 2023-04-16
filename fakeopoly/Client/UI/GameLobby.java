@@ -161,13 +161,13 @@ public class GameLobby {
 		// Update readiness of player
 		try {
 			if (readyBtn.getBackground() == new JButton().getBackground()) {
+				sendMessageAction("I am Ready!");
 				client.getPlayerService().setIsReadyById(true, client.getClientId());
 				readyBtn.setBackground(readyColor);
-				sendMessageAction("I am Ready!");
 			} else {
+				sendMessageAction("I am not Ready!");
 				client.getPlayerService().setIsReadyById(false, client.getClientId());
 				readyBtn.setBackground(null);
-				sendMessageAction("I am not Ready!");
 			}
 		} catch (RemoteException e) {
 			readyBtn.setBackground(null);
