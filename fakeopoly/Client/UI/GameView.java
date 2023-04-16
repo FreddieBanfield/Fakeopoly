@@ -41,13 +41,13 @@ import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
 
 public class GameView {
-    private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
-    private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
-    private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
+    //private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
+    //private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
+    //private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
     // Brady's filepath for whatever reason
-    // private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
-    // private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
-    // private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
+    private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
+    private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
+    private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
 
     private JFrame frame;
     private int frameWidth;
@@ -381,7 +381,7 @@ public class GameView {
                 playerDetails[i] = new JLabel(setPlayerDetailsString(i));
                 // playerDetails[i].setForeground(colour);
                 playerDetails[i].setBounds(startingX, startingY + (yOffset * i), width, height);
-                setOwnedProperties();
+                displayOwnedProperties();
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -389,29 +389,46 @@ public class GameView {
         }
     }
 
-    public void setOwnedProperties() {
+    //Display eeach players owned properties
+    public void displayOwnedProperties() {
         int startingX = 370 / 10;
-        int startingY = frameHeight - 750;
-        int width = 400;
-        int height = 60;
-        int yOffset = height + 10;
+        int startingY = frameHeight -700;
+        int width = 10;
+        int height = 10;
+        int yOffset = height + 60;
+        int xOffset = 0;
 
+        //get the list of properties
         ArrayList<Property> properties = null;
         try {
             properties = client.getPlayerService().getProperties();
         } catch (Exception error) {
             System.out.println(error);
         }
-
-        for (int i = 0; i < imagesNum; i++) {
-            if (!properties.get(i).getColor().equals("None")) {
-                JLabel prop = new JLabel();
-                prop.setIcon(null);
-                prop.setText("" + i);
-                prop.setBounds(startingX, startingY + (yOffset * i), width, height);
-                // prop.setBackground();
+        try {
+            //make one list for each player
+            for(int x = 0; x < client.getPlayerService().getTotalPlayers(); x ++){ 
+                //build and display the list
+                for (int i = 0; i < properties.size(); i++) {
+                    try {
+                        if (!properties.get(i).getColor().equals("None")) {
+                            JLabel prop = new JLabel();
+                            prop.setIcon(null);
+                            prop.setBounds(startingX + (width * i), startingY + (yOffset * x), width, height);
+                            prop.setBackground(Color.black);
+                            prop.setOpaque(true);
+                            controlsPanel.add(prop);
+                        }
+                    } catch (Exception error) {
+                        System.out.println(error);
+                    }
+            
+                }
             }
+        } catch (Exception e) {
+            System.out.println(e);
         }
+
 
     }
 
@@ -481,6 +498,8 @@ public class GameView {
         rollDice.setEnabled(true);
         endTurn.setEnabled(false);
         updatePlayerDetails();
+        displayOwnedProperties();
+        //createBoard();
     }
 
     public void disableTurn() {
@@ -491,6 +510,8 @@ public class GameView {
         for (int i = 0; i < playerDetails.length; i++) {
             playerDetails[i].setText(setPlayerDetailsString(i));
         }
+        displayOwnedProperties();
+        //createBoard();
     }
 
     public void enableEndturn() {
