@@ -169,7 +169,8 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
             // dont let player move and check if they can get out
             int count = players.get(id).increaseJailCount();
             if (count == 3) {
-                // pay and leave
+                players.get(id).setMoney(players.get(id).getMoney() - 50);
+
                 movePlayerIcon(newLocation, id);
                 players.get(id).setLocation(newLocation);
                 players.get(id).setJailCount(0);
@@ -276,6 +277,11 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     }
 
     @Override
+    public ArrayList<Property> getProperties() {
+        return properties;
+    }
+
+    @Override
     public void addMessage(Message message) throws RemoteException {
         messages.add(message);
         UpdateMessageBoard();
@@ -307,10 +313,11 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     @Override
     public void setIsReadyById(Boolean isReady, int id) throws RemoteException {
         players.get(id).setIsReady(isReady);
-        checkIfAllPlayersAreReady();
+        if (checkIfAllPlayersAreReady())
+            startGame();
     }
 
-    private void checkIfAllPlayersAreReady() throws RemoteException {
+    private boolean checkIfAllPlayersAreReady() throws RemoteException {
         int readyPlayers = 0;
         totalPlayers = 0;
         for (int i = 0; i < players.size(); i++) {
@@ -323,13 +330,17 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         }
 
         if (totalPlayers == readyPlayers && totalPlayers > 1) {
-            for (int i = 0; i < players.size(); i++) {
-                if (players.get(i) != null) {
-                    players.get(i).getClient().startGame();
-                }
+            return true;
+        }
+        return false;
+    }
+
+    private void startGame() throws RemoteException {
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i) != null) {
+                players.get(i).getClient().startGame();
             }
         }
-
     }
 
     @Override
@@ -375,6 +386,28 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     public boolean checkIfPlayerOwns(int propertyId, int id) throws RemoteException {
         if (properties.get(propertyId).getOwner() == players.get(id))
             return true;
+        return false;
+    }
+
+    @Override
+    public void setOwnedPropertyImage(int id, int propertyId, String propertyColor) {
+        for (int x = 0; x < totalPlayers; x++) {
+            try {
+                players.get(x).getClient().setOwnedPropertyImage(id, propertyId, propertyColor);
+            } catch (Exception e) {
+                System.out.print(e);
+            }
+        }
+    }
+
+    @Override
+    public boolean gameHasStarted() {
+        try {
+            if (checkIfAllPlayersAreReady())
+                return true;
+        } catch (RemoteException e) {
+            System.out.println(e);
+        }
         return false;
     }
 

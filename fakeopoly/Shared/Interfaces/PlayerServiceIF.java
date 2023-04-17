@@ -3,6 +3,7 @@ package Shared.Interfaces;
 import java.awt.Color;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import Shared.Objects.Message;
 import Shared.Objects.Player;
@@ -51,10 +52,16 @@ public interface PlayerServiceIF extends Remote {
 
     public String getMessages() throws RemoteException;
 
+    public ArrayList<Property> getProperties() throws RemoteException;
+
     public void setPlayerMoney(int id, int value) throws RemoteException;
 
     public void setPropertyOwner(int propertyId, int id) throws RemoteException;
 
     public boolean checkIfPlayerOwns(int propertyId, int id) throws RemoteException;
+
+    public void setOwnedPropertyImage(int id, int propertyId, String propertyColor) throws RemoteException;
+
+    public boolean gameHasStarted() throws RemoteException;
 
 }

@@ -135,6 +135,24 @@ public class GameLobby {
 		}
 	}
 
+	public void sendMessageAction(String mess) {
+		String playerName;
+		try {
+			// Create Message object
+			playerName = client.getPlayerService().getNameById(client.getClientId());
+			String messageContent = mess;
+			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+			Date date = new Date();
+			String time = formatter.format(date);
+			Message message = new Message(playerName, messageContent, time);
+
+			client.getPlayerService().addMessage(message);
+			messageTF.setText("");
+		} catch (RemoteException e) {
+			System.out.println(e);
+		}
+	}
+
 	// Readies a player and updates server
 	private void readyBtnAction(JButton readyBtn) {
 		// Set color of button to symbolize readiness
@@ -143,9 +161,11 @@ public class GameLobby {
 		// Update readiness of player
 		try {
 			if (readyBtn.getBackground() == new JButton().getBackground()) {
+				sendMessageAction("I am Ready!");
 				client.getPlayerService().setIsReadyById(true, client.getClientId());
 				readyBtn.setBackground(readyColor);
 			} else {
+				sendMessageAction("I am not Ready!");
 				client.getPlayerService().setIsReadyById(false, client.getClientId());
 				readyBtn.setBackground(null);
 			}
