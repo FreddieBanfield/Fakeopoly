@@ -43,7 +43,7 @@ public class GameClient {
         frame.setLocationRelativeTo(null); // Centers screen
         frame.setResizable(false);
         openMainMenu();
-        //openGameView();
+        // openGameView();
     }
 
     public void openMainMenu() {
@@ -67,6 +67,10 @@ public class GameClient {
             // Setup connections with Server APIs
             _playerService = (PlayerServiceIF) Naming
                     .lookup("rmi://" + getServerAddress() + ":" + getServerPort() + "/PlayerService");
+
+            // Check if game has started
+            if (_playerService.gameHasStarted())
+                throw new Exception("Game has already started");
 
             // Create Player object on server
             setClientId(_playerService.createPlayer(playerName, playerColor));
@@ -181,6 +185,7 @@ public class GameClient {
     public GameLobby getGameLobby() {
         return gameLobby;
     }
+
     public GameView getGameView() {
         return gameView;
     }
@@ -190,10 +195,10 @@ public class GameClient {
      */
     public static void main(String[] args) throws Exception {
         GameClient client = new GameClient();
-        try{
+        try {
             client.mainMenu.getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             client.mainMenu.getFrame().setVisible(true);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
     }

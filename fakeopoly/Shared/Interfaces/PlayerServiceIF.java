@@ -62,4 +62,6 @@ public interface PlayerServiceIF extends Remote {
 
     public void setOwnedPropertyImage(int id, int propertyId, String propertyColor) throws RemoteException;
 
+    public boolean gameHasStarted() throws RemoteException;
+
 }

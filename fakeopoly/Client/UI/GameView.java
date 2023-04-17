@@ -372,7 +372,7 @@ public class GameView {
         int startingY = frameHeight - 750;
         int width = 400;
         int height = 60;
-        int yOffset = height + 10;
+        int yOffset = height + 30;
         for (int i = 0; i < playerDetails.length; i++) {
             try {
                 Color colour = client.getPlayerService().getColorById(i);
@@ -402,7 +402,7 @@ public class GameView {
         int startingY = frameHeight - 700;
         int width = 20;
         int height = 10;
-        int yOffset = height + 60;
+        int yOffset = height + 80;
 
         try {
 
