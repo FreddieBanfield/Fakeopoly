@@ -41,16 +41,15 @@ import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
 
 public class GameView {
-    private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
-    private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
-    private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
-    private String OWNEDPATH = "fakeopoly/Client/Resources/OwnedProperties/";
+    //private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
+    //private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
+    //private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
+    //private String OWNEDPATH = "fakeopoly/Client/Resources/OwnedProperties/";
     // Brady's filepath for whatever reason
-    // private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
-    // private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
-    // private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
-    // private String OWNEDPATH =
-    // "Fakeopoly/fakeopoly/Client/Resources/OwnedProperties/";
+    private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
+    private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
+    private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
+    private String OWNEDPATH = "Fakeopoly/fakeopoly/Client/Resources/OwnedProperties/";
 
     private JFrame frame;
     private int frameWidth;
@@ -744,13 +743,39 @@ public class GameView {
     }
 
     public void updatePlayerDetails() {
-        for (int i = 0; i < playerDetails.length; i++) {
-            playerDetails[i].setText(setPlayerDetailsString(i));
-            playerDetails[i].repaint();
-            playerDetails[i].revalidate();
+        try {
+            for (int i = 0; i < playerDetails.length; i++) {
+                if(client.getPlayerService().endGame()){
+                    playerDetails[i].setText(setEndGame(i));
+                    playerDetails[i].repaint();
+                    playerDetails[i].revalidate();
+                }else{
+                    playerDetails[i].setText(setPlayerDetailsString(i));
+                    playerDetails[i].repaint();
+                    playerDetails[i].revalidate();
+                
+                }
+            }
+        } catch (Exception e) {
+            System.out.print(e);
         }
-    }
 
+    }
+    public String setEndGame(int id){
+        try {
+            int money = client.getPlayerService().getMoneyById(id);
+            String name = client.getPlayerService().getNameById(id);
+            if(money < 0){
+                return "<html>Player: " + name + " &nbsp &nbsp Money: " + money + " <br/></br>Properties: <html> -------- You lose";
+            }
+            return "<html>Player: " + name + " &nbsp &nbsp Money: " + money 
+                    + " <br/></br>Properties: <html>";
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return "";
+    }
     public void enableTurn() {
         rollDice.setEnabled(true);
         endTurn.setEnabled(false);

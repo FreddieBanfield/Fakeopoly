@@ -79,4 +79,8 @@ public class ClientService extends UnicastRemoteObject implements ClientServiceI
     public void setOwnedPropertyImage(int id, int propertyId, String propertyColor) {
         gameClient.getGameView().setOwnedPropertyImage(id, propertyId, propertyColor);
     }
+    @Override
+    public void disableButtons(){
+        gameClient.getGameView().disableTurn();
+    }
 }
