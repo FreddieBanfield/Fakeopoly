@@ -46,11 +46,10 @@ public class GameView {
     private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
     private String OWNEDPATH = "fakeopoly/Client/Resources/OwnedProperties/";
     // Brady's filepath for whatever reason
-    // private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
-    // private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
-    // private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
-    // private String OWNEDPATH =
-    // "Fakeopoly/fakeopoly/Client/Resources/OwnedProperties/";
+    //private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
+    //private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
+    //private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
+    //private String OWNEDPATH = "Fakeopoly/fakeopoly/Client/Resources/OwnedProperties/";
 
     private JFrame frame;
     private int frameWidth;
@@ -744,13 +743,17 @@ public class GameView {
     }
 
     public void updatePlayerDetails() {
-        for (int i = 0; i < playerDetails.length; i++) {
-            playerDetails[i].setText(setPlayerDetailsString(i));
-            playerDetails[i].repaint();
-            playerDetails[i].revalidate();
+        try {
+            for (int i = 0; i < playerDetails.length; i++) {
+                    playerDetails[i].setText(setPlayerDetailsString(i));
+                    playerDetails[i].repaint();
+                    playerDetails[i].revalidate();
+            }
+        } catch (Exception e) {
+            System.out.print(e);
         }
-    }
 
+    }
     public void enableTurn() {
         rollDice.setEnabled(true);
         endTurn.setEnabled(false);

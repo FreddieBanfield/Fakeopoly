@@ -160,6 +160,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
             movePlayerIcon(newLocation, id);
             players.get(id).setLocation(newLocation);
             players.get(id).setJailCount(0);
+            players.get(id).setJail(false);
             try {
                 players.get(id).getClient().enableTurnEnd();
             } catch (RemoteException e) {
@@ -170,7 +171,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
             int count = players.get(id).increaseJailCount();
             if (count == 3) {
                 players.get(id).setMoney(players.get(id).getMoney() - 50);
-
+                players.get(id).setJail(false);
                 movePlayerIcon(newLocation, id);
                 players.get(id).setLocation(newLocation);
                 players.get(id).setJailCount(0);
@@ -198,13 +199,10 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         } else if (players.get(id).getJail() == false) {
             players.get(id).setDoubles(0);
             // move player normally
-            if (newLocation != 30) {
                 players.get(id).setLocation(newLocation);
                 // Update Clients UI
                 movePlayerIcon(newLocation, id);
-            } else {
-                toJail(id);
-            }
+
             try {
                 players.get(id).getClient().enableTurnEnd();
             } catch (RemoteException e) {
@@ -374,9 +372,9 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
 
     @Override
     public void setPlayerMoney(int id, int value) throws RemoteException {
-        players.get(id).setMoney(players.get(id).getMoney() - value);
+        int newBalance = players.get(id).getMoney() - value;
+        players.get(id).setMoney(newBalance);
     }
-
     @Override
     public void setPropertyOwner(int propertyId, int id) throws RemoteException {
         properties.get(propertyId).setOwner(players.get(id));
