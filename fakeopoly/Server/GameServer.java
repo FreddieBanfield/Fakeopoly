@@ -48,8 +48,8 @@ public class GameServer {
         properties = new ArrayList<Property>();
 
         ObjectMapper mapper = new ObjectMapper();
-        //String path = "./fakeopoly/Server/SeededData/Properties.json";
-        String path = "./Fakeopoly/fakeopoly/Server/SeededData/Properties.json";
+        String path = "./fakeopoly/Server/SeededData/Properties.json";
+        //String path = "./Fakeopoly/fakeopoly/Server/SeededData/Properties.json";
         try {
             properties = mapper.readValue(Paths.get(path).toFile(),
                     new TypeReference<ArrayList<Property>>() {

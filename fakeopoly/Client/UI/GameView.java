@@ -41,15 +41,15 @@ import Client.Other.PropertyActionListener;
 import Shared.Objects.Property;
 
 public class GameView {
-    //private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
-    //private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
-    //private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
-    //private String OWNEDPATH = "fakeopoly/Client/Resources/OwnedProperties/";
+    private String BOARDPATH = "fakeopoly/Client/Resources/Board/";
+    private String DICEPATH = "fakeopoly/Client/Resources/Dice/";
+    private String MODALPATH = "fakeopoly/Client/Resources/Modal/";
+    private String OWNEDPATH = "fakeopoly/Client/Resources/OwnedProperties/";
     // Brady's filepath for whatever reason
-    private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
-    private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
-    private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
-    private String OWNEDPATH = "Fakeopoly/fakeopoly/Client/Resources/OwnedProperties/";
+    //private String BOARDPATH = "Fakeopoly/fakeopoly/Client/Resources/Board/";
+    //private String DICEPATH = "Fakeopoly/fakeopoly/Client/Resources/Dice/";
+    //private String MODALPATH = "Fakeopoly/fakeopoly/Client/Resources/Modal/";
+    //private String OWNEDPATH = "Fakeopoly/fakeopoly/Client/Resources/OwnedProperties/";
 
     private JFrame frame;
     private int frameWidth;
