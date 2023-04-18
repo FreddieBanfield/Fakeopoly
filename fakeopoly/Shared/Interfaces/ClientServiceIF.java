@@ -37,4 +37,5 @@ public interface ClientServiceIF extends Remote {
     public void setOwnedPropertyImage(int id, int propertyId, String propertyColor) throws RemoteException;
     
     public void disableButtons() throws RemoteException;
+
 }

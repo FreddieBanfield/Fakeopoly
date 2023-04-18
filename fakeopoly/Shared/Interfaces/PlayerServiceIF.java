@@ -64,6 +64,4 @@ public interface PlayerServiceIF extends Remote {
 
     public boolean gameHasStarted() throws RemoteException;
 
-    public boolean endGame() throws RemoteException;
-
 }

@@ -745,36 +745,14 @@ public class GameView {
     public void updatePlayerDetails() {
         try {
             for (int i = 0; i < playerDetails.length; i++) {
-                if(client.getPlayerService().endGame()){
-                    playerDetails[i].setText(setEndGame(i));
-                    playerDetails[i].repaint();
-                    playerDetails[i].revalidate();
-                }else{
                     playerDetails[i].setText(setPlayerDetailsString(i));
                     playerDetails[i].repaint();
                     playerDetails[i].revalidate();
-                
-                }
             }
         } catch (Exception e) {
             System.out.print(e);
         }
 
-    }
-    public String setEndGame(int id){
-        try {
-            int money = client.getPlayerService().getMoneyById(id);
-            String name = client.getPlayerService().getNameById(id);
-            if(money < 0){
-                return "<html>Player: " + name + " &nbsp &nbsp Money: " + money + " <br/></br>Properties: <html> -------- You lose";
-            }
-            return "<html>Player: " + name + " &nbsp &nbsp Money: " + money 
-                    + " <br/></br>Properties: <html>";
-            
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return "";
     }
     public void enableTurn() {
         rollDice.setEnabled(true);

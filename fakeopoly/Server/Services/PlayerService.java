@@ -15,7 +15,6 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     private ArrayList<Message> messages;
     private int turn;
     private int totalPlayers;
-    private boolean endGame;
 
     public PlayerService(ArrayList<Player> players, ArrayList<Property> properties, ArrayList<Message> messages)
             throws RemoteException {
@@ -24,7 +23,6 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         this.properties = properties;
         this.messages = messages;
         turn = 0;
-        endGame = false;
     }
 
     @Override
@@ -162,6 +160,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
             movePlayerIcon(newLocation, id);
             players.get(id).setLocation(newLocation);
             players.get(id).setJailCount(0);
+            players.get(id).setJail(false);
             try {
                 players.get(id).getClient().enableTurnEnd();
             } catch (RemoteException e) {
@@ -172,7 +171,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
             int count = players.get(id).increaseJailCount();
             if (count == 3) {
                 players.get(id).setMoney(players.get(id).getMoney() - 50);
-
+                players.get(id).setJail(false);
                 movePlayerIcon(newLocation, id);
                 players.get(id).setLocation(newLocation);
                 players.get(id).setJailCount(0);
@@ -200,13 +199,10 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
         } else if (players.get(id).getJail() == false) {
             players.get(id).setDoubles(0);
             // move player normally
-            if (newLocation != 30) {
                 players.get(id).setLocation(newLocation);
                 // Update Clients UI
                 movePlayerIcon(newLocation, id);
-            } else {
-                toJail(id);
-            }
+
             try {
                 players.get(id).getClient().enableTurnEnd();
             } catch (RemoteException e) {
@@ -377,24 +373,7 @@ public class PlayerService extends UnicastRemoteObject implements PlayerServiceI
     @Override
     public void setPlayerMoney(int id, int value) throws RemoteException {
         int newBalance = players.get(id).getMoney() - value;
-        if(newBalance < 0){
-            endGame = true;
-        }
         players.get(id).setMoney(newBalance);
-    }
-    @Override
-    public boolean endGame(){
-        //set the game to  end
-        if(endGame){
-            for (int x = 0; x < totalPlayers; x++) {
-                try {
-                    players.get(x).getClient().disableButtons();
-                } catch (Exception e) {
-                    System.out.print(e);
-                }
-            }
-        }
-        return endGame;
     }
     @Override
     public void setPropertyOwner(int propertyId, int id) throws RemoteException {
